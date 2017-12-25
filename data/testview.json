@@ -1,0 +1,20 @@
+{
+    "id":"testview",
+    "statement":"What are the causes of climate change?",
+    "details":"inquiring minds want to know.",
+    "questions":[
+        
+    ],
+    "answers":[
+        {
+            "id":102,
+            "statement":"Methane gas"
+        },
+        {
+            "id":103,
+            "statement":"Carbon dioxide in the upper atomsphere"
+        }
+    ],
+    "pros":[],
+    "cons": []
+}
