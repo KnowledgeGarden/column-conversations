@@ -69,7 +69,7 @@
 
  
 #viewfooter {
-   /* clear: both;*/
+    margin-top: 10px;
 	width: 958px;
     border: 1px solid black;
 	background: white;    
