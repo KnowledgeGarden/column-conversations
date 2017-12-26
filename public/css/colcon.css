@@ -42,19 +42,22 @@
     overflow-x: scroll; 
     overflow-y: hidden;
     margin: 12px;
-    height: 400px; 
 }
 
 /**
  * width is set to accomodate lots of columns.
  * If they wrap when adding more columns, then
- * width must increase
+ * width must increase.
+ * The formula seems to be column width * num colums + 100px
  */
 .columncontainer {
-	width: 1700px;
+	width: 2200px;
 }
 .datacontainer {
-	width: 1700px;
+    width: 2200px;
+/*    overflow-y:scroll;
+    white-space:nowrap;*/
+
 }
 
 .headerimage {
@@ -64,16 +67,22 @@
 .column {
     float:left;
     border: 1px solid black;
-    width: 238px;
+    width: 300px;
     background: white;
-    overflow:scroll;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 .datacolumn {
+    height: 400px; 
     float:left;
     border: 1px solid white;
-    width: 238px;
+    width: 300px;
     background: white;
-    overflow:scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    break-inside: avoid;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 
  
@@ -87,8 +96,15 @@
 }
 
 .node {
+    margin-top: 4px;
+    float: top;
     border: 1px solid black;
     border-radius: 3px;
+    min-height: 40px;
+    font-family:pragmatica-web,sans-serif;
+}
+.node:hover {
+    background-color: rgba(255, 255, 0, 0.801);
 }
 
 .respond {
