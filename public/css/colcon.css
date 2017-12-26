@@ -30,6 +30,7 @@
 	background: white;    
     margin: 12px;
     font-family:pragmatica-web,sans-serif;
+    border-radius: 3px;
 }
 
 /**
@@ -42,6 +43,7 @@
     overflow-x: scroll; 
     overflow-y: hidden;
     margin: 12px;
+    border-radius: 3px;
 }
 
 /**
@@ -55,9 +57,6 @@
 }
 .datacontainer {
     width: 2200px;
-/*    overflow-y:scroll;
-    white-space:nowrap;*/
-
 }
 
 .headerimage {
@@ -68,9 +67,12 @@
     float:left;
     border: 1px solid black;
     width: 300px;
-    background: white;
+    height: 34px;
+    background: rgb(240, 234, 234);
+    border-radius: 3px;
     margin-left: 4px;
     margin-right: 4px;
+    font-family:pragmatica-web,sans-serif;    
 }
 .datacolumn {
     height: 400px; 
