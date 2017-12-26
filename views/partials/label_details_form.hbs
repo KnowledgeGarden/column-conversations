@@ -1,0 +1,24 @@
+<div id="topbox">
+    <h2>{{formtitle}}</h2>
+    <form method="post" action="{{action}}">
+        <input type="hidden" name="hidden-1" value="{{hidden-1}}">
+        <input type="hidden" name="hidden-2" value="{{hidden-2}}">
+        <p style="margin-left: 20px">
+            <b>Label</b><br/>
+            <input type="text" size="100" name="title" placeholder="{{labelplaceholder}}" value="{{formlabel}}">
+        </p>
+        <p style="margin-left: 20px">
+            <b>Details</b><br/>
+            <textarea name="details" id="editor1" placeholder="{{detailsplaceholder}}" rows="10" cols="100">
+                {{formdetails}}
+            </textarea>
+            <script>
+              CKEDITOR.replace( 'editor1' );
+            </script>
+        </p>
+        <p style="margin-left: 20px">
+            <button type="submit" class="btn btn-success">Save</button>
+            <button style="margin-left: 20px" type="submit" class="btn btn-success" onclick("location.href='/';">Cancel</button>
+        </p>
+    </form>
+</div>
