@@ -4,6 +4,12 @@ var constants = require('../apps/constants');
 var helper = require('./helper');
 var TagModel = require('../apps/models/tag_model');
 
+router.get("/tagindex", function(req, res, next) {
+    var data = helper.startData();
+    //TODO
+    res.render('tag_index', data);
+});
+
 router.get("/newtag/:id", function(req, res, next) {
     var data = helper.startData(),
         id = req.params.id;
@@ -15,6 +21,12 @@ router.get("/newtag/:id", function(req, res, next) {
    return res.render('newnode_form', data);
 });
 
+router.get("/:id", function(req, res, next) {
+    var id = req.params.id;
+    console.log("TAGGET",id);
+    //TODO
+    res.redirect("/"); //For now
+});
 router.post("/newnode", function(req, res, next) {
     var title = req.body.title
         details = req.body.details,
@@ -25,5 +37,7 @@ router.post("/newnode", function(req, res, next) {
     res.redirect(parentId)
     
 });
+
+
 
 module.exports = router;

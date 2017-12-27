@@ -27,6 +27,10 @@ function typeToLargeImage(type) {
     return result;
 }
 
+router.get("/conversationindex", function(req, res, next) {
+    var data = helper.startData();
+    res.render("conversation_index", data);
+});
 router.get("/newconversation", function(req, res, next) {
     console.log("New Conversation");
     var data = helper.startData();
