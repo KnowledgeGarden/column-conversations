@@ -2,6 +2,7 @@ var fs = require('fs');
 
 const DataPath = "./data/";
 const ConversationPath = DataPath+"conversations/";
+const TagPath = DataPath+"tags/";
 
 var FileDatabase,
     instance;
@@ -17,8 +18,11 @@ FileDatabase = function() {
     function readFile(path, callback) {
         console.log("Database.readFile",path);
         fs.readFile(path, function read(err, data) {
+            var json;
             console.log("Database.readFile-1",err,data);
-            var json = JSON.parse(data);
+            if (data) {
+                json = JSON.parse(data);
+            }
             return callback(err, json);
         });
     };
@@ -44,6 +48,19 @@ FileDatabase = function() {
     };
 
     /**
+     * 
+     * @param {*} id 
+     * @param {*} callback err data
+     */
+    self.fetchTag = function(id, callback) {
+        var path = TagPath+id;
+        readFile(path, function(err, data) {
+            console.log("Datatabase.fetchTag",id,data);
+            return callback(err, data);
+        });
+    };
+
+    /**
      * Save node data
      * @param id
      * @param {*} json 
@@ -61,11 +78,19 @@ FileDatabase = function() {
      * Save conversation data
      * @param {*} id 
      * @param {*} json 
-     * @param {*} callback 
+     * @param {*} callback err
      */
     self.saveConversationData = function(id, json, callback) {
         console.log("DatabaseSaveConversationData",id, JSON.stringify(json));
         fs.writeFile(ConversationPath+id, 
+                JSON.stringify(json), function(err) {
+            return callback(err);
+        }); 
+    };
+
+    self.saveTagData = function(id, json, callback) {
+        console.log("DatabaseSaveTagData",id, JSON.stringify(json));
+        fs.writeFile(TagPath+id, 
                 JSON.stringify(json), function(err) {
             return callback(err);
         }); 
@@ -93,7 +118,9 @@ FileDatabase = function() {
         return walkSync(ConversationPath, []);
     };
 
-
+    self.listTags = function() {
+        return walkSync(TagPath, []);
+    };
 };
 instance = new FileDatabase();
 module.exports = instance;

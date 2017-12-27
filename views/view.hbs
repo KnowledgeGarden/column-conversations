@@ -70,13 +70,25 @@
             {{/each}}
         </div>
         <div class="datacolumn">
-            <!-- TODO notes -->
+            {{#each result.notes}}
+                <div class="node">
+                    <a style="margin-left:4px;" href="/conversation/{{id}}">{{statement}}</a>
+                </div>
+            {{/each}}
         </div>
         <div class="datacolumn">
-            <!-- TODO references -->
+            {{#each result.references}}
+                <div class="node">
+                    <a style="margin-left:4px;" href="/conversation/{{id}}">{{statement}}</a>
+                </div>
+            {{/each}}
         </div>
         <div class="datacolumn">
-            <!-- TODO tags -->
+            {{#each result.tags}}
+                <div class="node">
+                    <a style="margin-left:4px;" href="/tags/gettag/{{id}}">{{statement}}</a>
+                </div>
+            {{/each}}
         </div>
 
     </div>

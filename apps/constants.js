@@ -57,6 +57,7 @@ module.exports.NOTES_FIELD                  = "notes";
 module.exports.REFERENCES_FIELD             = "references";
 module.exports.DECISIONS_FIELD              = "decisions";
 module.exports.RELATIONS_FIELD              = "relations";
+module.exports.BOOKMARKS_FIELD              = "bookmarks";
 //CREATED_DATE_FIELD and CREATOR_ID_FIELD
 // might become part of a JOURNAL_LIST_FIELD
 // in which we track all activity around a given node
