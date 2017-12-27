@@ -4,38 +4,58 @@ var constants = require('../apps/constants');
 var ConversationModel = require('../apps/models/conversation_model');
 var helper = require('./helper');
 
+function typeToLargeImage(type) {
+    var result = "/images/ibis/map.png"; // default
+    if (type === constants.QUESTION_NODE_TYPE) {
+        result = "/images/ibis/issue.png";
+    } else if (type === constants.ANSWER_NODE_TYPE) {
+        result = "/images/ibis/position.png";
+    } else if (type === constants.PRO_NODE_TYPE) {
+        result = "/images/ibis/plus.png";
+    } else if (type === constants.CON_NODE_TYPE) {
+        result = "/images/ibis/minus.png";
+    } else if (type === constants.NOTE_NODE_TYPE) {
+        result = "/images/ibis/note.png";
+    } else if (type === constants.REFERENCE_NODE_TYPE) {
+        result = "/images/ibis/reference.png";
+    } else if (type === constants.DECISION_NODE_TYPE) {
+        result = "/images/ibis/decision.png";
+    } else if (type === constants.TAG_NODE_TYPE) {
+        result = "/images/tag.png";
+    }
+
+    return result;
+}
 
 router.get("/newconversation", function(req, res, next) {
     console.log("New Conversation");
     var data = helper.startData();
-    data.action = "/conversation/newconversation/";
-    data.labelplaceholder = "Enter this conversation's label";
-    data.detailsplaceholder = "Enter a description of this conversation";
-    data.formtitle = "New Conversation";
     return res.render("newconversation_form", data);
 });
 
-/**
- * This is a special function: when you create a new conversation
- * it does not have a root node. If it has a root node, paint
- * that like any other node; otherwise, open a form to create
- * the conversation's root node.
- * TODO consider adding root node forms on the newconversation_form
- * The core issue is that when you fetch a conversation, that's not
- * what you render; rather you render its "rootnode"
- * This is typically called from the sidebar
- */
 router.get("/fetchconversation/:id", function(req, res, next) {
-
+    var data = helper.startData(),
+        id = req.params.id;
+    console.log("FetchingCon",id);
+    ConversationModel.fetchConversation(id, function(result) {
+        console.log("Model returned "+result);
+        data.result = result;
+        data.img = "/images/ibis/map.png";
+        data.rootimg = typeToLargeImage(result.rootNode.type);
+        data.rootnode = result.rootNode;
+        return res.render('view_conversation', data);
+    });
 });
+
 
 router.get("/newquestion/:id", function(req, res, next) {
     var data = helper.startData(),
-    id = req.params.id;
+        id = req.params.id;
     console.log("NewQuestion ",id);
     //TODO
     return res.redirect("/conversation/"+id);
 });
+
 router.get("/newanswer/:id", function(req, res, next) {
     
 });
@@ -58,11 +78,17 @@ router.get("/:id", function(req, res, next) {
     
 });
 
+
+ // Creates a new conversation node as well as its root node
 router.post("/newconversation", function(req, res, next) {
+    console.log("XXXX",JSON.stringify(req.body));
     var title = req.body.title
-        details = req.body.details;
-    console.log("PostNewCon"+title);
-    ConversationModel.newConversation(title, details, function(rslt) {
+        details = req.body.details,
+        type = req.body.hidden_1,
+        roottitle = req.body.roottitle,
+        rootdetails = req.body.rootdetails;
+    console.log("PostNewCon", type,title,details,  roottitle, rootdetails);
+    ConversationModel.newConversation(title, details, type, roottitle, rootdetails, function(rslt) {
         return res.redirect("/");
     });
 });

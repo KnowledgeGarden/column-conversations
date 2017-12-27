@@ -4,13 +4,17 @@ var Helper,
 
 Helper = function() {
     var self = this;
-    console.log("HELPER");
+    //console.log("HELPER");
 
+    /**
+     * Prefill a JSONObject with data for rendering
+     * @return
+     */
     self.startData = function() {
         var result = { title: 'ColCon' };
-        var nd = null;
-        //TODO add list of conversations: 
-        result.conList = nd;
+        var nd = ConversationModel.listConversations();
+        //list conversations: 
+        result.conlist = nd;
         return result;
     };
     

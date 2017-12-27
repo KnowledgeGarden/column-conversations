@@ -8,6 +8,7 @@
     width: 35px;
     height: 5px;
     background-color: #333;
+    color: rgb(80, 76, 76);
     margin: 6px 0;
     transition: 0.4s;
 }
@@ -152,6 +153,7 @@
     font-size: 36px;
     margin-left: 50px;
 }
+
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
 #main {
