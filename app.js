@@ -12,6 +12,7 @@ var session = require("express-session");
 var Indx = require('./routes/index');
 var Conv = require('./routes/convo');
 var users = require('./routes/users');
+var Tags = require('./routes/tags');
 
 var app = express();
 var hbs = require('hbs');
@@ -42,6 +43,7 @@ app.use(session({
 }));
 
 app.use('/users', users);
+app.use('/tags', Tags);
 app.use('/conversation', Conv);
 // Index has to be last
 app.use('/', Indx);

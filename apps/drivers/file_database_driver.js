@@ -15,7 +15,9 @@ FileDatabase = function() {
      * @param {*} callback err, data
      */
     function readFile(path, callback) {
+        console.log("Database.readFile",path);
         fs.readFile(path, function read(err, data) {
+            console.log("Database.readFile-1",err,data);
             var json = JSON.parse(data);
             return callback(err, json);
         });
@@ -28,9 +30,15 @@ FileDatabase = function() {
         });
     };
 
+    /**
+     * 
+     * @param {*} nodeId 
+     * @param {*} callback err data
+     */
     self.fetchNode = function(nodeId, callback) {
         var path = DataPath+nodeId;
         readFile(path, function(err, data) {
+            console.log("Database.fetchNode",nodeId,data);
             return callback(err, data);
         });
     };

@@ -51,26 +51,77 @@ router.get("/fetchconversation/:id", function(req, res, next) {
 router.get("/newquestion/:id", function(req, res, next) {
     var data = helper.startData(),
         id = req.params.id;
-    console.log("NewQuestion ",id);
-    //TODO
-    return res.redirect("/conversation/"+id);
+    console.log("NewQuestion",id);
+    data.hidden_1 = id;
+    data.hidden_2 = constants.QUESTION_NODE_TYPE;
+    data.formtitle = "New Question Node";
+    data.action = "/conversation/newnode"
+    return res.render('newnode_form', data);
 });
 
 router.get("/newanswer/:id", function(req, res, next) {
-    
+    var data = helper.startData(),
+        id = req.params.id;
+    console.log("NewAnswer",id);
+    data.hidden_1 = id;
+    data.hidden_2 = constants.ANSWER_NODE_TYPE;
+    data.formtitle = "New Answer Node";
+    data.action = "/conversation/newnode"
+    return res.render('newnode_form', data);
 });
+
 router.get("/newpro/:id", function(req, res, next) {
-    
+    var data = helper.startData(),
+        id = req.params.id;
+    console.log("NewPro",id);
+    data.hidden_1 = id;
+    data.hidden_2 = constants.PRO_NODE_TYPE;
+    data.formtitle = "New Pro Argument Node";
+    data.action = "/conversation/newnode"
+    return res.render('newnode_form', data);
 });
+
 router.get("/newcon/:id", function(req, res, next) {
-    
+    var data = helper.startData(),
+        id = req.params.id;
+    console.log("NewCon",id);
+    data.hidden_1 = id;
+    data.hidden_2 = constants.CON_NODE_TYPE;
+    data.formtitle = "New Con Argument Node";
+    data.action = "/conversation/newnode"
+    return res.render('newnode_form', data);
 });
-                    
+
+router.get("/newnote/:id", function(req, res, next) {
+    var data = helper.startData(),
+        id = req.params.id;
+    console.log("NewNote",id);
+    data.hidden_1 = id;
+    data.hidden_2 = constants.NOTE_NODE_TYPE;
+    data.formtitle = "New Note Node";
+    data.action = "/conversation/newnode"
+    return res.render('newnode_form', data);
+});
+
+router.get("/newreference/:id", function(req, res, next) {
+    var data = helper.startData(),
+        id = req.params.id;
+    console.log("NewReference",id);
+    data.hidden_1 = id;
+    data.hidden_2 = constants.REFERENCE_NODE_TYPE;
+    data.formtitle = "New Reference Node";
+    data.action = "/conversation/newnode"
+    return res.render('newnode_form', data);
+});
+
+/**
+ * Get any node other than conversation and tag
+ */
 router.get("/:id", function(req, res, next) {
     var data = helper.startData(),
         id = req.params.id;
     console.log("Fetching ",id);
-    ConversationModel.fetchView(id, function(result) {
+    ConversationModel.fetchView(id, function(err, result) {
         console.log("Model returned "+result);
         data.result = result;
         return res.render('view', data);
@@ -78,6 +129,22 @@ router.get("/:id", function(req, res, next) {
     
 });
 
+/**
+ * Fundamentally handles all kinds of nodes
+ * TODO: make tags go to a tag router
+ */
+router.post("/newnode", function(req, res, next) {
+    var title = req.body.title
+        details = req.body.details,
+        parentId = req.body.hidden_1,
+        type = req.body.hidden_2;
+    //TODO
+    console.log("NN", JSON.stringify(req.body));
+    ConversationModel.newResponseNode(parentId, type, title, details, function(err) {
+        res.redirect(parentId);
+    });
+ 
+});
 
  // Creates a new conversation node as well as its root node
 router.post("/newconversation", function(req, res, next) {
@@ -91,22 +158,6 @@ router.post("/newconversation", function(req, res, next) {
     ConversationModel.newConversation(title, details, type, roottitle, rootdetails, function(rslt) {
         return res.redirect("/");
     });
-});
-
-router.post("/newquestion", function(req, res, next) {
-    
-});
-
-router.post("/newanswer", function(req, res, next) {
-    
-});
-
-router.post("/newpro", function(req, res, next) {
-    
-});
-
-router.post("/conversation/newcon", function(req, res, next) {
-    
 });
     
 

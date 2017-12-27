@@ -1,6 +1,9 @@
 /** Constants to tidy up code */
 
-/** File Suffix */
+/**
+ * File Suffix
+ * It appears that we will not be using filename suffixes
+ */
 module.exports.CONVERSATION_SUFFIX          = "_CONV";
 module.exports.MAP_SUFFIX                   = "_MAP";
 module.exports.QUESTION_SUFFIX              = "_QN";
@@ -25,4 +28,28 @@ module.exports.REFERENCE_NODE_TYPE          = "ReferenceNodeType";
 module.exports.DECISION_NODE_TYPE           = "DecisionNodeType";
 module.exports.TAG_NODE_TYPE                = "TagNodeType";
 module.exports.RELATION_NODE_TYPE           = "RelationNodeType";
+module.exports.BOOKMARK_NODE_TYPE           = "Bookmark_NODE_TYPE";
 
+/**
+ * Node schema fields
+ * While we don't actually use these in Javascript
+ * it's worth recording them somewhere
+ * The difference being, e.g.
+ *   node.id vs node[constants.ID_FIELD]
+ */
+module.exports.ID_FIELD                     = "id";
+//like the subject or label field of a blog post
+module.exports.STATEMENT_FIELD              = "statement";
+//like the rich-text body field of a blog post
+module.exports.DETAILS_FIELD                = "details";
+module.exports.CREATOR_ID_FIELD             = "creatorId";
+//root node of a conversation
+module.exports.ROOT_NODE                    = "rootNode";
+module.exports.ANSWERS_FIELD                = "answers";
+module.exports.QUESTIONS_FIELD              = "questions";
+module.exports.CON_ARGS_FIELD               = "conargs";
+module.exports.PRO_ARGS_FIELD               = "proargs";
+module.exports.NOTES_FIELD                  = "notes";
+module.exports.REFERENCES_FIELD             = "references";
+module.exports.DECISIONS_FIELD              = "decisions";
+module.exports.RELATIONS_FIELD              = "relations";
