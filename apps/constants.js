@@ -1,5 +1,6 @@
 /** Constants to tidy up code */
-
+//a user identity for testing
+module.exports.TEST_CREATOR                 = "TestUser";
 /**
  * File Suffix
  * It appears that we will not be using filename suffixes
@@ -43,6 +44,9 @@ module.exports.STATEMENT_FIELD              = "statement";
 //like the rich-text body field of a blog post
 module.exports.DETAILS_FIELD                = "details";
 module.exports.CREATOR_ID_FIELD             = "creatorId";
+//VERSION_FIELD will support optimistic locking for
+// concurrency if this platform is multi-user
+module.exports.VERSION_FIELD                = "version";
 //root node of a conversation
 module.exports.ROOT_NODE                    = "rootNode";
 module.exports.ANSWERS_FIELD                = "answers";
@@ -53,3 +57,7 @@ module.exports.NOTES_FIELD                  = "notes";
 module.exports.REFERENCES_FIELD             = "references";
 module.exports.DECISIONS_FIELD              = "decisions";
 module.exports.RELATIONS_FIELD              = "relations";
+//CREATED_DATE_FIELD and CREATOR_ID_FIELD
+// might become part of a JOURNAL_LIST_FIELD
+// in which we track all activity around a given node
+module.exports.CREATED_DATE_FIELD           = "createdDate";

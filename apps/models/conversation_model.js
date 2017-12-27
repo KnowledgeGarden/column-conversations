@@ -48,6 +48,26 @@ Conversation = function() {
         });
     };
 
+    /**
+     * Core node creation function
+     * @param {*} creatorId 
+     * @param {*} type 
+     * @param {*} statement 
+     * @param {*} details 
+     * @returns
+     */
+    function newNode(creatorId, type, statement, details) {
+        var result = {};
+        result.id = newId();
+        result.creatorId = creatorId;
+        result.createdDate = new Date();
+        result.version = newId();
+        result.type = type;
+        result.statement = statement;
+        result.details = details;
+        return result;
+    };
+
     ///////////////////////
     //TODO
     // Will be adding creationDate
@@ -57,17 +77,14 @@ Conversation = function() {
     ///////////////////////
     /**
      * create a new node and save it
+     * @param creatorId
      * @param {*} type 
      * @param {*} statement 
      * @param {*} details 
      * @param {*} callback err, nodeId
      */
-    self.newNode = function(type, statement, details, callback) {
-        var node = {};
-        node.id = newId();
-        node.type = type;
-        node.statement = statement;
-        node.details = details;
+    self.newNode = function(creatorId, type, statement, details, callback) {
+        var node = newNode(creatorId, type, statement, details);
         Database.saveNodeData(node.id, node, function(err) {
             return callback(err, id);
         });
@@ -117,14 +134,10 @@ Conversation = function() {
         } // else we're hosed!!!
     };
 
-    self.newResponseNode = function(parentId, type, statement, details, callback) {
+    self.newResponseNode = function(creatorId, parentId, type, statement, details, callback) {
         //First, make this node
-        var id = newId(),
-            node = {};
-        node.id = id;
-        node.type = type;
-        node.details = details;
-        node.statement = statement;
+        var node = newNode(creatorId, type, statement, details),
+            id = node.id;
         Database.saveNodeData(id, node, function(err) {
             //now update the parent
             var struct = {};
@@ -148,6 +161,7 @@ Conversation = function() {
     };
     /**
      * Create a new conversation and its root node
+     * @param creatorId
      * @param {*} title 
      * @param {*} details 
      * @param {*} type 
@@ -155,27 +169,19 @@ Conversation = function() {
      * @param {*} rootdetails 
      * @param {*} callback 
      */
-    self.newConversation = function(title, details, type, roottitle, rootdetails, callback) {
-        var json = {},
-            id = newId(),
+    self.newConversation = function(creatorId, title, details, type, roottitle, rootdetails, callback) {
+        //first, create the root node
+        var json = newNode(creatorId, type, roottitle, rootdetails),
+            id = json.id,
             xroot;
         console.log("ConModelNewConvo",type);
-        //first, create the root node
-        json.id = id;
-        json.statement = roottitle;
-        json.details = rootdetails;
-        json.type = type;
         Database.saveNodeData(json.id, json, function(err) {
             //now create the conversation
             xroot = {};
             xroot.id = id;
             xroot.type = type;
             xroot.statement = roottitle;
-            json = {};
-            json.id = newId();
-            json.statement = title;
-            json.details = details;
-            json.type = constants.CONVERSATION_NODE_TYPE;
+            json = newNode(creatorId, constants.CONVERSATION_NODE_TYPE, title, details);
             json.rootNode = xroot;
             Database.saveConversationData(json.id, json, function(err) {
                 console.log("ModelNewConversation", title, err);            

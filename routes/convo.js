@@ -137,10 +137,11 @@ router.post("/newnode", function(req, res, next) {
     var title = req.body.title
         details = req.body.details,
         parentId = req.body.hidden_1,
-        type = req.body.hidden_2;
+        type = req.body.hidden_2,
+        creatorId = constants.TEST_CREATOR; //ToDo
     //TODO
     console.log("NN", JSON.stringify(req.body));
-    ConversationModel.newResponseNode(parentId, type, title, details, function(err) {
+    ConversationModel.newResponseNode(creatorId, parentId, type, title, details, function(err) {
         res.redirect(parentId);
     });
  
@@ -153,9 +154,10 @@ router.post("/newconversation", function(req, res, next) {
         details = req.body.details,
         type = req.body.hidden_1,
         roottitle = req.body.roottitle,
-        rootdetails = req.body.rootdetails;
+        rootdetails = req.body.rootdetails,
+        creatorId = constants.TEST_CREATOR;
     console.log("PostNewCon", type,title,details,  roottitle, rootdetails);
-    ConversationModel.newConversation(title, details, type, roottitle, rootdetails, function(rslt) {
+    ConversationModel.newConversation(creatorId, title, details, type, roottitle, rootdetails, function(rslt) {
         return res.redirect("/");
     });
 });
