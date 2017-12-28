@@ -83,24 +83,10 @@ Conversation = function() {
      * @param {*} callback 
      */
     self.newResponseNode = function(creatorId, parentId, type, statement, details, callback) {
-        //First, make this node
- /*            id = node.id;
-        Database.saveNodeData(id, node, function(err) {
-            //now update the parent
-            var struct = {};
-            struct.id = id;
-            struct.type = type;
-            struct.statement = statement;*/
-        self.fetchView(parentId, function(err, data) {
+       self.fetchView(parentId, function(err, data) {
             console.log("ConversationModel.newResponseNode",parentId,data);
             var node = CommonModel.newNode(creatorId, type, statement, details);
             CommonModel.addStructToNode(type, node, data);
-            /*var kids = CommonModel.getChildList(type, data);
-            if (!kids) {
-                kids = [];
-            }
-            CommonModel.setChildList(type, kids, data);
-            kids.push(struct);*/
             Database.saveNodeData(parentId, data, function(err) {
                 Database.saveNodeData(node.id, node, function(ex) {
                     return callback(ex);

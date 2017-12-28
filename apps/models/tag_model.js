@@ -53,19 +53,6 @@ Tags = function() {
         Database.fetchNode(nodeId, function(err, node) {
             CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
             CommonModel.addStructToNode(constants.TAG_NODE_TYPE, tag, node);
-    /*        //first add this node to that tag
-            addNodeToTag(node, tag);
-            var kids = CommonModel.getChildList(constants.TAG_NODE_TYPE, node);
-            if (!kids) {
-                kids = [];
-            }
-            var struct = {};
-            struct.id = tag.id;
-            struct.type = tag.type;
-            struct.statement = tag.statement;
-            kids.push(struct);
-            CommonModel.setChildList(tag.type, kids, node);
-            //before going, save both of them*/
             Database.saveNodeData(nodeId, node, function(err) {
                 console.log("TagModel.wireTagNode-1"+JSON.stringify(tag));
                 Database.saveTagData(tag.id, tag, function(err) {
@@ -94,7 +81,6 @@ Tags = function() {
                 theTag = CommonModel.newNode(creatorId, constants.TAG_NODE_TYPE, id, "" );
                 theTag.id = id;
             }
- //       CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
             wireTagNode(theTag, nodeId);
             return callback(err);
         });

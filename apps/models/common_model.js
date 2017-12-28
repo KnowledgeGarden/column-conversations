@@ -70,7 +70,7 @@ Common = function() {
         }
     };
 
-        /**
+    /**
      * Core node creation function
      * @param {*} creatorId 
      * @param {*} type 
@@ -156,6 +156,12 @@ Common = function() {
         }
     };
 
+    /**
+     * Add a child struct to a tiven node
+     * @param {*} childType 
+     * @param {*} sourceNode 
+     * @param {*} targetNode 
+     */
     self.addStructToNode = function(childType, sourceNode, targetNode) {
         console.log("CommonModel.addStructToNode",childType,sourceNode,targetNode);
         var struct = {},
