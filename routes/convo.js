@@ -28,6 +28,7 @@ function typeToLargeImage(type) {
 }
 
 router.get("/conversationindex", function(req, res, next) {
+    req.session.curCon = null;
     var data = helper.startData(req);
     res.render("conversation_index", data);
 });
@@ -43,6 +44,7 @@ router.get("/fetchconversation/:id", function(req, res, next) {
     console.log("FetchingCon",id);
     ConversationModel.fetchConversation(id, function(result) {
         console.log("Model returned "+result);
+        req.session.curCon = result.rootNode.id;
         data.result = result;
         data.img = "/images/ibis/map.png";
         data.rootimg = typeToLargeImage(result.rootNode.type);

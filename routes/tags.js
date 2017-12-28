@@ -5,6 +5,7 @@ var helper = require('./helper');
 var TagModel = require('../apps/models/tag_model');
 
 router.get("/tagindex", function(req, res, next) {
+    req.session.curCon = null;
     var data = helper.startData(req);
     data.taglist = TagModel.listTags();
     res.render('tag_index', data);

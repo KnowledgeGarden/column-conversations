@@ -22,6 +22,8 @@ Helper = function() {
         var nd = ConversationModel.listConversations();
         //list conversations: 
         result.conlist = nd;
+        //current conversation
+        result.curCon = req.session.curCon;
         return result;
     };
     
