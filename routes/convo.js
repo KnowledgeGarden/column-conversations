@@ -161,8 +161,8 @@ router.post("/newconversation", function(req, res, next) {
         rootdetails = req.body.rootdetails,
         creatorId = req.session.theUser; //constants.TEST_CREATOR;
     console.log("PostNewCon", type,title,details,  roottitle, rootdetails);
-    ConversationModel.newConversation(creatorId, title, details, type, roottitle, rootdetails, function(rslt) {
-        return res.redirect("/");
+    ConversationModel.newConversation(creatorId, title, details, type, roottitle, rootdetails, function(id) {
+        return res.redirect("/conversation/"+id);
     });
 });
     

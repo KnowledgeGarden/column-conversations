@@ -15,10 +15,7 @@ router.get("/newtag/:id", function(req, res, next) {
         id = req.params.id;
     console.log("NewTag",id);
     data.hidden_1 = id;
-    data.hidden_2 = constants.TAG_NODE_TYPE;
-    data.formtitle = "New Tag Node";
-    data.action = "/tags/newnode"
-   return res.render('newnode_form', data);
+   return res.render('newtag_form', data);
 });
 
 router.get("/gettag/:id", function(req, res, next) {
@@ -32,13 +29,13 @@ router.get("/gettag/:id", function(req, res, next) {
 });
 
 router.post("/newnode", function(req, res, next) {
-    var title = req.body.title
+    var label = req.body.title
         details = req.body.details,
         parentId = req.body.hidden_1,
-        type = req.body.hidden_2,
+        type = constants.TAG_NODE_TYPE,
         creatorId = req.session.theUser; //constants.TEST_CREATOR; //TODO
     console.log("NT", JSON.stringify(req.body));
-    TagModel.newTag(creatorId, title, parentId, function(err) {
+    TagModel.newTag(creatorId, label, parentId, function(err) {
         return res.redirect('/conversation/'+parentId)        
     });
 });

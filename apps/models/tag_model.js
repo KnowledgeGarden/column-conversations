@@ -37,6 +37,7 @@ Tags = function() {
 
     function labelToId(label) {
         var result = label.replaceAll(' ', '_');
+        result = result.toLowerCase();
         return result;
     };
 
@@ -86,14 +87,16 @@ Tags = function() {
     self.newTag = function(creatorId, tagLabel, nodeId, callback) {
         var id = labelToId(tagLabel);
         self.fetchTag(id, function(err, data) {
+            console.log("TagModel.newTag",tagLabel,id,data);
             var theTag;
             if (data) {
                 theTag = data;
             } else {
-                theTag = CommonModel.newNode(creatorId, constants.TAG_NODE_TYPE, id, "" );
+                theTag = CommonModel.newNode(creatorId, constants.TAG_NODE_TYPE, tagLabel, "" );
                 theTag.id = id;
             }
             wireTagNode(theTag, nodeId);
+            console.log("TagModel.newTag-1",theTag);
             return callback(err);
         });
     };

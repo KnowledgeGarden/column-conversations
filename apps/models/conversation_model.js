@@ -103,7 +103,7 @@ Conversation = function() {
      * @param {*} type 
      * @param {*} roottitle 
      * @param {*} rootdetails 
-     * @param {*} callback 
+     * @param {*} callback returns new conversation's id
      */
     self.newConversation = function(creatorId, title, details, type, roottitle, rootdetails, callback) {
         //first, create the root node
@@ -121,7 +121,7 @@ Conversation = function() {
             json.rootNode = xroot;
             Database.saveConversationData(json.id, json, function(err) {
                 console.log("ModelNewConversation", title, err);            
-                return callback(err);
+                return callback(id);
             });
         });
     };
