@@ -5,13 +5,13 @@ var helper = require('./helper');
 var TagModel = require('../apps/models/tag_model');
 
 router.get("/tagindex", function(req, res, next) {
-    var data = helper.startData();
+    var data = helper.startData(req);
     data.taglist = TabModel.listTags();
     res.render('tag_index', data);
 });
 
 router.get("/newtag/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("NewTag",id);
     data.hidden_1 = id;
@@ -23,7 +23,7 @@ router.get("/newtag/:id", function(req, res, next) {
 
 router.get("/gettag/:id", function(req, res, next) {
     var id = req.params.id,
-        data = helper.startData();
+        data = helper.startData(req);
     console.log("TAGGET",id);
     TagModel.fetchTag(id, function(err, result) {
         data.result = result;

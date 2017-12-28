@@ -1,0 +1,6 @@
+{
+    "secretPassword":"SomeSecret!",
+    "validHandles": [
+        "joe", "sue"
+    ]
+}

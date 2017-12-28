@@ -2,8 +2,9 @@
     <div style="margin-left: 10px;">
 
         <h2><img style="margin-right: 4px" src="/images/ibis/map.png">Conversations</h2>
-
-        <p></p><a  href="/conversation/newconversation"><b>New Conversation</b></a></p>
+        {{#if isAuthenticated}}
+            <p><a  href="/conversation/newconversation"><b>New Conversation</b></a></p>
+        {{/if}}
         {{#each conlist}}
             <a href="/conversation/fetchconversation/{{id}}">{{statement}}</a><br/>
         {{/each}}

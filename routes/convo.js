@@ -28,17 +28,17 @@ function typeToLargeImage(type) {
 }
 
 router.get("/conversationindex", function(req, res, next) {
-    var data = helper.startData();
+    var data = helper.startData(req);
     res.render("conversation_index", data);
 });
 router.get("/newconversation", function(req, res, next) {
     console.log("New Conversation");
-    var data = helper.startData();
+    var data = helper.startData(req);
     return res.render("newconversation_form", data);
 });
 
 router.get("/fetchconversation/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("FetchingCon",id);
     ConversationModel.fetchConversation(id, function(result) {
@@ -53,7 +53,7 @@ router.get("/fetchconversation/:id", function(req, res, next) {
 
 
 router.get("/newquestion/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("NewQuestion",id);
     data.hidden_1 = id;
@@ -64,7 +64,7 @@ router.get("/newquestion/:id", function(req, res, next) {
 });
 
 router.get("/newanswer/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("NewAnswer",id);
     data.hidden_1 = id;
@@ -75,7 +75,7 @@ router.get("/newanswer/:id", function(req, res, next) {
 });
 
 router.get("/newpro/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("NewPro",id);
     data.hidden_1 = id;
@@ -86,7 +86,7 @@ router.get("/newpro/:id", function(req, res, next) {
 });
 
 router.get("/newcon/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("NewCon",id);
     data.hidden_1 = id;
@@ -97,7 +97,7 @@ router.get("/newcon/:id", function(req, res, next) {
 });
 
 router.get("/newnote/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("NewNote",id);
     data.hidden_1 = id;
@@ -108,7 +108,7 @@ router.get("/newnote/:id", function(req, res, next) {
 });
 
 router.get("/newreference/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("NewReference",id);
     data.hidden_1 = id;
@@ -122,7 +122,7 @@ router.get("/newreference/:id", function(req, res, next) {
  * Get any node other than conversation and tag
  */
 router.get("/:id", function(req, res, next) {
-    var data = helper.startData(),
+    var data = helper.startData(req),
         id = req.params.id;
     console.log("Fetching ",id);
     ConversationModel.fetchView(id, function(err, result) {
@@ -142,7 +142,7 @@ router.post("/newnode", function(req, res, next) {
         details = req.body.details,
         parentId = req.body.hidden_1,
         type = req.body.hidden_2,
-        creatorId = constants.TEST_CREATOR; //ToDo
+        creatorId = req.session.theUser; //constants.TEST_CREATOR; //ToDo
     //TODO
     console.log("NN", JSON.stringify(req.body));
     ConversationModel.newResponseNode(creatorId, parentId, type, title, details, function(err) {
@@ -159,7 +159,7 @@ router.post("/newconversation", function(req, res, next) {
         type = req.body.hidden_1,
         roottitle = req.body.roottitle,
         rootdetails = req.body.rootdetails,
-        creatorId = constants.TEST_CREATOR;
+        creatorId = req.session.theUser; //constants.TEST_CREATOR;
     console.log("PostNewCon", type,title,details,  roottitle, rootdetails);
     ConversationModel.newConversation(creatorId, title, details, type, roottitle, rootdetails, function(rslt) {
         return res.redirect("/");

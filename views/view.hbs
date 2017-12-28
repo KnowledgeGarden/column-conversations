@@ -11,31 +11,45 @@
     <div class="columncontainer">
             <div class="column" style="text-align: center;">
                 <img class="headerimage" src="/images/ibis/issue.png">Question
-                <a href="/conversation/newquestion/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{#if isAuthenticated}}
+                    <a href="/conversation/newquestion/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{/if}}
             </div>
             <div class="column" style="text-align: center;">
                 <img class="headerimage" src="/images/ibis/position.png">Answer
-                <a href="/conversation/newanswer/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{#if isAuthenticated}}
+                    <a href="/conversation/newanswer/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{/if}}
             </div>
             <div class="column" style="text-align: center;">
                 <img class="headerimage" src="/images/ibis/plus.png">Pro
-                <a href="/conversation/newpro/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{#if isAuthenticated}}
+                    <a href="/conversation/newpro/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{/if}}
             </div>
             <div class="column" style="text-align: center;">
                 <img class="headerimage" src="/images/ibis/minus.png">Con
-                <a href="/conversation/newcon/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{#if isAuthenticated}}
+                    <a href="/conversation/newcon/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{/if}}
             </div>
             <div class="column" style="text-align: center;">
                 <img class="headerimage" src="/images/ibis/note.png">Notes
-                <a href="/conversation/newnote/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{#if isAuthenticated}}
+                    <a href="/conversation/newnote/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{/if}}
             </div>
             <div class="column" style="text-align: center;">
                 <img class="headerimage" src="/images/ibis/reference.png">References
-                <a href="/conversation/newreference/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{#if isAuthenticated}}
+                   <a href="/conversation/newreference/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{/if}}
             </div>
             <div class="column" style="text-align: center;">
                 <img class="headerimage" src="/images/tag.png">Tags
-                <a href="/tags/newtag/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{#if isAuthenticated}}
+                    <a href="/tags/newtag/{{result.id}}"><img class="respond" src="/images/respond_sm.png"></a>
+                {{/if}}
             </div>
     </div>
     <!-- column data -->
