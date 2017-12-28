@@ -6,7 +6,7 @@ var TagModel = require('../apps/models/tag_model');
 
 router.get("/tagindex", function(req, res, next) {
     var data = helper.startData(req);
-    data.taglist = TabModel.listTags();
+    data.taglist = TagModel.listTags();
     res.render('tag_index', data);
 });
 
@@ -36,7 +36,7 @@ router.post("/newnode", function(req, res, next) {
         details = req.body.details,
         parentId = req.body.hidden_1,
         type = req.body.hidden_2,
-        creatorId = constants.TEST_CREATOR; //TODO
+        creatorId = req.session.theUser; //constants.TEST_CREATOR; //TODO
     console.log("NT", JSON.stringify(req.body));
     TagModel.newTag(creatorId, title, parentId, function(err) {
         return res.redirect('/conversation/'+parentId)        
