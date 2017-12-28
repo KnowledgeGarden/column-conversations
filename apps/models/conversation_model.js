@@ -145,6 +145,7 @@ Conversation = function() {
                     console.log("FE", fx, JSON.stringify(thecon));
                     con = {};
                     con.id = thecon.id;
+                    con.img = thecon.img;
                     con.statement = thecon.statement;
                     result.push(con);
                 });
