@@ -34,6 +34,7 @@ Tags = function() {
     ////////////////////
     function addNodeToTag(node, tag) {
         console.log("TagModel.addNodeToTag",node,tag);
+        CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
         var kids = CommonModel.getChildList(constants.TAG_NODE_TYPE, tag);
         if (!kids) {
             kids = [];
@@ -46,11 +47,13 @@ Tags = function() {
         CommonModel.setChildList(tag.type, kids, tag);
     };
 
-    function addTagToNode(tag, nodeId) {
-        console.log("TagModel.addTagToNode", nodeId, JSON.stringify(tag));
+    function wireTagNode(tag, nodeId) {
+        console.log("TagModel.wireTagNode", nodeId, JSON.stringify(tag));
         //fetch node
         Database.fetchNode(nodeId, function(err, node) {
-            //first add this node to that tag
+            CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
+            CommonModel.addStructToNode(constants.TAG_NODE_TYPE, tag, node);
+    /*        //first add this node to that tag
             addNodeToTag(node, tag);
             var kids = CommonModel.getChildList(constants.TAG_NODE_TYPE, node);
             if (!kids) {
@@ -62,9 +65,9 @@ Tags = function() {
             struct.statement = tag.statement;
             kids.push(struct);
             CommonModel.setChildList(tag.type, kids, node);
-            //before going, save both of them
+            //before going, save both of them*/
             Database.saveNodeData(nodeId, node, function(err) {
-                console.log("TagModel.addTagToNode-1"+JSON.stringify(tag));
+                console.log("TagModel.wireTagNode-1"+JSON.stringify(tag));
                 Database.saveTagData(tag.id, tag, function(err) {
                     return;
                 });
@@ -91,7 +94,8 @@ Tags = function() {
                 theTag = CommonModel.newNode(creatorId, constants.TAG_NODE_TYPE, id, "" );
                 theTag.id = id;
             }
-            addTagToNode(theTag, nodeId);
+ //       CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
+            wireTagNode(theTag, nodeId);
             return callback(err);
         });
     };
