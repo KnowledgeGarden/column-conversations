@@ -31,8 +31,9 @@ Conversation = function() {
      * @param {*} callback err json
      */
     self.fetchView = function(viewId, callback) {
-        console.log("Model fetching node",viewId);
+        console.log("ConversationModel.fetchView",viewId);
         Database.fetchNode(viewId, function(err, data) {
+            console.log("ConversationModel.fetchView++",err,data);
             return callback(err, data);            
         });
     };
@@ -152,7 +153,101 @@ Conversation = function() {
             }
         });
         return result;
+    };
+
+    function fetchAllkidStructs(node) {
+        //There really is a better way to do this
+        var result = [];
+        var snappers = node.answers;
+        if (snappers) {
+            result = snappers;
+        }
+        snappers = node.questions;
+        if (snappers) {
+            result = result.concat(snappers);
+        }
+        snappers = node.proargs;
+        if (snappers) {
+            result = result.concat(snappers);
+        }
+        snappers = node.conargs;
+        if (snappers) {
+            result = result.concat(snappers);
+        }
+        snappers = node.notes;
+        if (snappers) {
+            result = result.concat(snappers);
+        }
+        snappers = node.references;
+        if (snappers) {
+            result = result.concat(snappers);
+        }
+        snappers = node.decisions;
+        if (snappers) {
+            result = result.concat(snappers);
+        }
+        return result;
+    };
+
+    function recursor(thisNode, childStruct, callback) {
+
     }
+    /**
+     * A recursive tree builder which returns a JSON tree
+     * @param {string} rootNodeId
+     * @param {string} parentNodeId can be null or undefined at first
+     * @callback JSON
+     * https://www.jstree.com/docs/json/
+     */
+    self.toJsTree = function(rootNodeId, parentNode, callback) {
+        console.log("ConversationModel.toJsTree",rootNodeId,parentNode);
+        var parentStack = [];
+        parentStack.push(rootNodeId)
+        var thisNode,
+            childArray,
+            childNode,
+            childStruct;
+        //fetch this parent
+        self.fetchView(rootNodeId, function(err, data) {
+            console.log("ConversationModel.toJsTree-1",rootNodeId,data);            
+            //craft thisNode
+            thisNode = {};
+            thisNode.id = data.id;
+            if (!parentNode) {
+                var state = {};
+                state.opened = true;
+                thisNode.state = state;
+            }
+            thisNode.text = data.statement;
+            thisNode.icon = CommonModel.nodeToSmallIcon(data.type);
+            //We are now crafting the children of thisNode
+            var parentKids = thisNode.children;
+            if (!parentKids) {
+                parentKids = [];
+            }
+            var snappers = fetchAllkidStructs(data);
+            if (snappers) {
+                var len = snappers.length;
+                while (len > 0) {      
+                    childStruct = snappers.pop();
+                    len = snappers.length;
+                    if (childStruct) {
+                        //recurse
+                        self.toJsTree(childStruct.id, thisNode, function(tree) {
+                            console.log("ConversationModel.toJsTree-2",rootNodeId,data);            
+                            parentKids.push(tree);
+                        });
+                    }
+                    console.log("ConversationModel.toJsTree-3",len,parentKids);
+                }
+                if (parentKids.length > 0) {
+                    thisNode.children = parentKids;                    
+                }
+            }
+            console.log("ConversationModel.toJsTree++",thisNode);
+            return callback(thisNode); 
+        });
+    };
 
 };
 instance = new Conversation();

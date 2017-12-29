@@ -27,6 +27,29 @@ function typeToLargeImage(type) {
     return result;
 }
 
+/**
+ * Paint the tree view: ViewFirst
+ * The view uses ajax to fetch the tree
+ */
+router.get('/jstree/:id', function(req, res, next) {
+    var data = helper.startData(req),
+    id = req.params.id;
+    data.ajaxid = id;
+    return res.render('jstree', data);
+});
+
+/**
+ * Paint the tree by ajax call
+ */
+router.get('/ajaxtree/:id', function (req, res, next) {
+    var id = req.params.id;
+    ConversationModel.toJsTree(id, null, function(tree) {
+        console.log("Convo.jstree",id,tree);
+        return res.json(tree);
+    });
+
+});
+
 router.get("/conversationindex", function(req, res, next) {
     req.session.curCon = null;
     var data = helper.startData(req);

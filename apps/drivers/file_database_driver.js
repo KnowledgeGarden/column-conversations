@@ -15,23 +15,24 @@ FileDatabase = function() {
      * @param {*} path 
      * @param {*} callback err, data
      */
-    function readFile(path, callback) {
+    function readFile(path) {
         console.log("Database.readFile",path);
-        fs.readFile(path, function read(err, data) {
-            var json;
-            console.log("Database.readFile-1",err,data);
-            if (data) {
-                json = JSON.parse(data);
+        var json,
+            f = fs.readFileSync(path);
+        if (f) {
+            try {
+                json = JSON.parse(f);
+            } catch (e) {
+                console.log("Database.readFile error",path,e);
             }
-            return callback(err, json);
-        });
+        }
+        return json;
     };
 
     self.fetchConversation = function(conId, callback) {
         var path = ConversationPath+conId;
-        readFile(path, function(err, data) {
-            return callback(err, data);
-        });
+        var result = readFile(path);
+        return callback(null, result);
     };
 
     /**
@@ -41,10 +42,8 @@ FileDatabase = function() {
      */
     self.fetchNode = function(nodeId, callback) {
         var path = DataPath+nodeId;
-        readFile(path, function(err, data) {
-            console.log("Database.fetchNode",nodeId,data);
-            return callback(err, data);
-        });
+        var result = readFile(path);
+        return callback(null, result);
     };
 
     /**
@@ -54,10 +53,8 @@ FileDatabase = function() {
      */
     self.fetchTag = function(id, callback) {
         var path = TagPath+id;
-        readFile(path, function(err, data) {
-            console.log("Datatabase.fetchTag",id,data);
-            return callback(err, data);
-        });
+        var result = readFile(path);
+        return callback(null, result);
     };
 
     /**
