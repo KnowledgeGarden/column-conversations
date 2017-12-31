@@ -54,7 +54,7 @@ Common = function() {
         } else if (type === constants.MAP_NODE_TYPE) {
             return "/images/ibis/map_sm.png";
         } else {
-            console.lot("CommonModel.nodeToSmallIcon ERROR",type);
+            console.log("CommonModel.nodeToSmallIcon ERROR",type);
             throw "Bad Type 1 "+type;
         }
     };
@@ -85,7 +85,7 @@ Common = function() {
         } else if (type === constants.MAP_NODE_TYPE) {
             return "/images/ibis/map.png";
         } else {
-            console.lot("CommonModel.nodeTolargeIcon ERROR",type);
+            console.log("CommonModel.nodeTolargeIcon ERROR",type);
             throw "Bad Type 2 "+type;
         }
     };

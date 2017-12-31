@@ -23,6 +23,8 @@ router.get('/fetch/:id/:type', function(req, res, next) {
     return res.redirect('/bookmark/'+id);
   } else if (type === constants.TAG_NODE_TYPE) {
     return res.redirect('/tags/gettag/'+id);
+  } else if (type === constants.CONVERSATION_NODE_TYPE) {
+    return res.redirect('/conversation/fetchconversation/'+id);
   } else {
     return res.redirect('/conversation/'+id);
   }

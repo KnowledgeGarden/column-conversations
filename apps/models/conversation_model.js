@@ -102,18 +102,19 @@ Conversation = function() {
         CommonModel.newNode(null, creatorId, type, roottitle, rootdetails, function(json) {
             var id = json.id,
                 xroot;
-            console.log("ConModelNewConvo",type);
+            console.log("ConversationModel.newConversation",type);
             Database.saveNodeData(json.id, json, function(err) {
                 //now create the conversation
                 xroot = {};
                 xroot.id = id;
                 xroot.type = type;
                 xroot.statement = roottitle;
-                json = CommonModel.newNode(creatorId, constants.CONVERSATION_NODE_TYPE, title, details);
-                json.rootNode = xroot;
-                Database.saveConversationData(json.id, json, function(err) {
-                    console.log("ModelNewConversation", title, err);            
-                    return callback(id);
+                CommonModel.newNode(null,creatorId, constants.CONVERSATION_NODE_TYPE, title, details, function(json1) {
+                    json1.rootNode = xroot;
+                    Database.saveConversationData(json1.id, json1, function(err) {
+                        console.log("ConversationModel.newConversation-1", title, err);            
+                        return callback(id);
+                    });
                 });
             });
         });
