@@ -24,7 +24,7 @@ Bookmark = function() {
      */
     self.newBookmark = function(creatorId, url, statement, details, callback) {
 //        console.log("BookmarkModel.newBookmark",creatorId,url,statement);
-        CommonModel.newNode(creatorId, constants.BOOKMARK_NODE_TYPE, statement, details, function(node) {
+        CommonModel.newNode(null, creatorId, constants.BOOKMARK_NODE_TYPE, statement, details, function(node) {
             node.url = url;
     //        console.log("BookmarkModel.newBookmark-1"+node);
             Database.saveBookmarkData(node.id, node, function(err) {

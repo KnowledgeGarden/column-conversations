@@ -88,6 +88,8 @@ FileDatabase = function() {
     ////////////////////////
     // General purpose
     //  To INTERPRET any node which can be in a conversation
+    // This is an extensible function: add fetch requirements to suit
+    //  We have to do this because of folder-based file types
     ////////////////////////
 
     self.fetchData = function(nodeId, callback) {
@@ -95,11 +97,20 @@ FileDatabase = function() {
         self.fetchNode(nodeId, function(err, data) {
             if (data) {
                 return callback(err, data);
+            } else {
+                self.fetchBookmark(nodeId, function(err1, data1) {
+                    if (data1) {
+                        return callback(err1, data1);
+                    } else {
+                        //TECHNICALLY SPEAKING, tags don't need to be here
+                        self.fetchTag(nodeId, function(err2, data2) {
+                            return callback(err2, data2);
+                            //NOTE: if other models are added you must add
+                            // their fetch methods here
+                        });
+                    }
+                });
             }
-            // fall through to Bookmarks
-            self.fetchBookmark(nodeId, function(err1, data1) {
-                return callback(err1, data1);
-            });
         });
     };
 
@@ -179,6 +190,7 @@ FileDatabase = function() {
     self.fetchBookmark = function(id, callback) {
         var path = BookmarkPath+id;
         var result = readFile(path);
+        console.log("Database.fetchBookmark",id,result);
         return callback(null, result);
     };
 

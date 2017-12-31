@@ -15,17 +15,17 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/fetch/:id', function(req, res, next) {
+router.get('/fetch/:id/:type', function(req, res, next) {
   var id = req.params.id,
-      type = req.body.type;
-  console.log("Index.fetch",id,type);
+      type = req.params.type;
+  console.log("Index.fetch",id,req.body);
   if (type === constants.BOOKMARK_NODE_TYPE) {
-    return res.redirect('bookmark/'+id);
+    return res.redirect('/bookmark/'+id);
+  } else if (type === constants.TAG_NODE_TYPE) {
+    return res.redirect('/tags/gettag/'+id);
+  } else {
+    return res.redirect('/conversation/'+id);
   }
-  if (type === constants.TAG_NODE_TYPE) {
-    return res.redirect('tags/'+id);
-  }
-  return res.redirect('/conversation/'+id);
   
 });
 

@@ -92,16 +92,21 @@ Common = function() {
 
     /**
      * Core node creation function
+     * @param nodeId  can be null
      * @param {*} creatorId 
      * @param {*} type 
      * @param {*} statement 
      * @param {*} details 
      * @param callback json
      */
-    self.newNode = function(creatorId, type, statement, details, callback) {
+    self.newNode = function(nodeId, creatorId, type, statement, details, callback) {
         console.log("CommonModel.newNode"+creatorId,type);
-        var result = {};
-        result.id = self.newId();
+        var result = {},
+            ix = nodeId;
+        if (!ix) {
+            ix = self.newId();
+        }
+        result.id = ix;
         result.creatorId = creatorId;
         result.createdDate = new Date();
         result.version = self.newId();

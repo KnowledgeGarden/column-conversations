@@ -67,7 +67,7 @@ Tags = function() {
     function wireTagNode(tag, nodeId) {
         console.log("TagModel.wireTagNode", nodeId, JSON.stringify(tag));
         //fetch node
-        Database.fetchNode(nodeId, function(err, node) {
+        Database.fetchData(nodeId, function(err, node) {
             CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
             CommonModel.addStructToNode(constants.TAG_NODE_TYPE, tag, node);
             Database.saveNodeData(nodeId, node, function(err) {
@@ -98,8 +98,7 @@ Tags = function() {
                 console.log("TagModel.newTag-1",theTag);
                 return callback(err);
             } else {
-                CommonModel.newNode(creatorId, constants.TAG_NODE_TYPE, tagLabel, "", function(theTag) {
-                    theTag.id = id;
+                CommonModel.newNode(id, creatorId, constants.TAG_NODE_TYPE, tagLabel, "", function(theTag) {
                     wireTagNode(theTag, nodeId);
                     console.log("TagModel.newTag-1",theTag);
                     return callback(err);

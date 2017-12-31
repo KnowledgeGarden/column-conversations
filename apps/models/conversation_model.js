@@ -72,7 +72,7 @@ Conversation = function() {
     self.newResponseNode = function(creatorId, parentId, type, statement, details, callback) {
        Database.fetchData(parentId, function(err, data) {
             console.log("ConversationModel.newResponseNode",type,parentId,data);
-            CommonModel.newNode(creatorId, type, statement, details, function(node) {
+            CommonModel.newNode(null, creatorId, type, statement, details, function(node) {
                 console.log("ConversationModel.newResponseNode-1",type,node);
                 CommonModel.addStructToNode(type, node, data);
                 // We cannot just do a "saveNodeData"
@@ -99,7 +99,7 @@ Conversation = function() {
      */
     self.newConversation = function(creatorId, title, details, type, roottitle, rootdetails, callback) {
         //first, create the root node
-        CommonModel.newNode(creatorId, type, roottitle, rootdetails, function(json) {
+        CommonModel.newNode(null, creatorId, type, roottitle, rootdetails, function(json) {
             var id = json.id,
                 xroot;
             console.log("ConModelNewConvo",type);
