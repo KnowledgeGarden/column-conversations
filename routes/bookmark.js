@@ -20,7 +20,13 @@ router.get("/bookmarkindex", function(req, res, next) {
  */
 router.get('/new', function(req, res, next) {
     var data = helper.startData(req),
-        query = req.query;
+        query = req.query,
+        creatorId = req.session.theUser;
+    //Must be logged in
+    if (!creatorId) {
+        return res.render("login_form", data);
+    }
+    
     data.formtitle = "New Bookmark";
     data.formlabel = query.title;
     data.url = query.url;
