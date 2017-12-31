@@ -5,6 +5,7 @@ var helper = require('./helper');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+//  console.log("Home",req.session);
   return res.render('index', helper.startData(req));
 });
 
@@ -16,10 +17,10 @@ router.get('/login', function(req, res, next) {
 router.post('/login', function(req, res, next) {
   var name = req.body.username,
       password = req.body.password;
-  console.log("LOGIN",name,password);
   if (!helper.authenticate(name, password, req)) {
     req.flash("error", "Authentication failed");
   }
-  return res.redirect("/");
+//  console.log("LOGIN",name,req.session);
+  return res.redirect('/');
 });
 module.exports = router;

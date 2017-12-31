@@ -29,7 +29,7 @@ module.exports.REFERENCE_NODE_TYPE          = "ReferenceNodeType";
 module.exports.DECISION_NODE_TYPE           = "DecisionNodeType";
 module.exports.TAG_NODE_TYPE                = "TagNodeType";
 module.exports.RELATION_NODE_TYPE           = "RelationNodeType";
-module.exports.BOOKMARK_NODE_TYPE           = "Bookmark_NODE_TYPE";
+module.exports.BOOKMARK_NODE_TYPE           = "BookmarkNodeType";
 
 /**
  * Node schema fields
@@ -62,3 +62,10 @@ module.exports.BOOKMARKS_FIELD              = "bookmarks";
 // might become part of a JOURNAL_LIST_FIELD
 // in which we track all activity around a given node
 module.exports.CREATED_DATE_FIELD           = "createdDate";
+
+/** EventTypes */
+module.exports.NEW_NODE_EVENT               = "NewNodeEvent";
+module.exports.EDIT_NODE_EVENT              = "EditNodeEvent";
+module.exports.ADD_CHILD_EVENT              = "AddChildEvent";
+module.exports.ADD_RELATION_EVENT           = "AddRelationEvent";
+

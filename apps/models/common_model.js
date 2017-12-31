@@ -5,7 +5,18 @@ var Common,
 Common = function() {
     var self = this;
 
-    function newId() {
+    // user UUIDs for Node IDs
+    // TODO not used
+    self.newUUID = function() {
+        return uuid.v4();
+    };
+
+
+    /**
+     * Some potential for collision
+     * @return
+     */
+    self.newId = function() {
         var d = new Date();
         return d.getTime().toString();
     }
@@ -29,13 +40,14 @@ Common = function() {
             return "/images/ibis/decision_sm.png";
         } else if (type === constants.RELATIONS_NODE_TYPE) {
             return "/images/cogwheel_sm.png";
-        } else if (type === constants.BOOKMARKS_NODE_TYPE) {
+        } else if (type === constants.BOOKMARK_NODE_TYPE) {
             return "/images/bookmark_sm.png";
         } else if (type === constants.CONVERSATION_NODE_TYPE) {
             return "/images/ibis/map_sm.png";
         } else if (type === constants.MAP_NODE_TYPE) {
             return "/images/ibis/map_sm.png";
         } else {
+            console.lot("CommonModel.nodeToSmallIcon ERROR",type);
             throw "Bad Type 1 "+type;
         }
     };
@@ -59,13 +71,14 @@ Common = function() {
             return "/images/ibis/decision.png";
         } else if (type === constants.RELATIONS_NODE_TYPE) {
             return "/images/cogwheel.png";
-        } else if (type === constants.BOOKMARKS_NODE_TYPE) {
+        } else if (type === constants.BOOKMARK_NODE_TYPE) {
             return "/images/bookmark.png";
         } else if (type === constants.CONVERSATION_NODE_TYPE) {
             return "/images/ibis/map.png";
         } else if (type === constants.MAP_NODE_TYPE) {
             return "/images/ibis/map.png";
         } else {
+            console.lot("CommonModel.nodeTolargeIcon ERROR",type);
             throw "Bad Type 2 "+type;
         }
     };
@@ -79,11 +92,12 @@ Common = function() {
      * @returns
      */
     self.newNode = function(creatorId, type, statement, details) {
+        console.log("CommonModel.newNode"+creatorId,type);
         var result = {};
-        result.id = newId();
+        result.id = self.newId();
         result.creatorId = creatorId;
         result.createdDate = new Date();
-        result.version = newId();
+        result.version = self.newId();
         result.type = type;
         result.img = self.nodeTolargeIcon(type);
         result.statement = statement;
@@ -124,8 +138,7 @@ Common = function() {
                     throw "Bad Type 3 "+type;
             } 
         } catch (e) {}
-        console.log("ConModel.getChildList",type,result,JSON.stringify(node));
-        
+        console.log("ConModel.getChildList",type,result,JSON.stringify(node));     
         return result;
     };
 
@@ -180,5 +193,9 @@ Common = function() {
     };
 
 };
-instance = new Common();
+//noticed that if you call a class > 1 times, best to
+// just send a singleton
+if (!instance) {
+    instance = new Common();
+}
 module.exports = instance;

@@ -1,9 +1,16 @@
 <!-- active node -->
 <div id="topbox">
-    <h2>{{result.statement}}</h2>
-    <p>
-        {{{result.details}}}
-    </p>
+    <div style="margin-left: 4px;">
+        <h2><img style="margin-right:4px;" src="{{result.img}}">{{result.statement}}</h2>
+        {{#if result.url}}
+            <p>
+                <b>URL </b><a href="{{result.url}}">{{result.url}}</a>
+            </p>
+        {{/if}}
+        <p>
+            {{{result.details}}}
+        </p>
+    </div>
 </div>
 <!-- left-right scrollable container -->
 <div class="columnscroller">

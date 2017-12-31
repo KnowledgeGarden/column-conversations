@@ -10,20 +10,6 @@ var Conversation,
 Conversation = function() {
     var self = this;
 
-    // user UUIDs for Node IDs
-    // TODO not used
-    function newUUID() {
-        return uuid.v4();
-    };
-
-    /**
-     * Some potential for collision
-     * @return
-     */
-    function newId() {
-        var d = new Date();
-        return d.getTime().toString();
-    }
 
     /**
      * Fetch a node
@@ -73,6 +59,21 @@ Conversation = function() {
         });
     };
 
+    //////////////////////////////
+    // TODO
+    //  Making conversations about heterogeneous node types is complicated.
+    //      In the file-based system:
+    //          All conversation nodes go in /data
+    //          All bookmark nodes go in /data/bookmarks
+    //      To make matters worse:
+    //          If someone plugs in a new app, e.g. blog,
+    //          Then we need to deal with that as well.
+    //  BEST to let the interpretation of where to save a node be handled
+    //      in the database_driver.
+    //  Same thing goes for fetching
+    //      fetchView ASSUMES it is a conversation node.
+    //          IN FACT, it might be a bookmark,blog, etc.
+    //////////////////////////////
 
     /**
      * Create a response node and add its reference to the parent
@@ -84,10 +85,13 @@ Conversation = function() {
      * @param {*} callback 
      */
     self.newResponseNode = function(creatorId, parentId, type, statement, details, callback) {
-       self.fetchView(parentId, function(err, data) {
+       Database.fetchData(parentId, function(err, data) {
             console.log("ConversationModel.newResponseNode",parentId,data);
             var node = CommonModel.newNode(creatorId, type, statement, details);
             CommonModel.addStructToNode(type, node, data);
+            // We cannot just do a "saveNodeData"
+            // because we do not know what the parent nodetype is
+            var parentType = data.type;
             Database.saveNodeData(parentId, data, function(err) {
                 Database.saveNodeData(node.id, node, function(ex) {
                     return callback(ex);
@@ -189,9 +193,6 @@ Conversation = function() {
         return result;
     };
 
-    function recursor(thisNode, childStruct, callback) {
-
-    }
     /**
      * A recursive tree builder which returns a JSON tree
      * @param {string} rootNodeId
@@ -250,5 +251,7 @@ Conversation = function() {
     };
 
 };
-instance = new Conversation();
+if (!instance) {
+    instance = new Conversation();
+}
 module.exports = instance;

@@ -127,6 +127,7 @@ Tags = function() {
     };
 
 };
-
-instance = new Tags();
-module.exports = instance
+if (!instance) {
+    instance = new Tags();
+}
+module.exports = instance;

@@ -44,7 +44,7 @@ router.get('/jstree/:id', function(req, res, next) {
 router.get('/ajaxtree/:id', function (req, res, next) {
     var id = req.params.id;
     ConversationModel.toJsTree(id, null, function(tree) {
-        console.log("Convo.jstree",id,tree);
+    //    console.log("Convo.jstree",id,tree);
         return res.json(tree);
     });
 
@@ -53,6 +53,10 @@ router.get('/ajaxtree/:id', function (req, res, next) {
 router.get("/conversationindex", function(req, res, next) {
     req.session.curCon = null;
     var data = helper.startData(req);
+    var nd = ConversationModel.listConversations();
+    //list conversations: 
+    data.conlist = nd;
+
     res.render("conversation_index", data);
 });
 router.get("/newconversation", function(req, res, next) {
@@ -84,7 +88,7 @@ router.get("/newquestion/:id", function(req, res, next) {
     data.hidden_1 = id;
     data.hidden_2 = constants.QUESTION_NODE_TYPE;
     data.formtitle = "New Question Node";
-    data.action = "/conversation/newnode"
+    data.action = "/conversation/newnode";
     return res.render('newnode_form', data);
 });
 
@@ -95,7 +99,7 @@ router.get("/newanswer/:id", function(req, res, next) {
     data.hidden_1 = id;
     data.hidden_2 = constants.ANSWER_NODE_TYPE;
     data.formtitle = "New Answer Node";
-    data.action = "/conversation/newnode"
+    data.action = "/conversation/newnode";
     return res.render('newnode_form', data);
 });
 
@@ -106,7 +110,7 @@ router.get("/newpro/:id", function(req, res, next) {
     data.hidden_1 = id;
     data.hidden_2 = constants.PRO_NODE_TYPE;
     data.formtitle = "New Pro Argument Node";
-    data.action = "/conversation/newnode"
+    data.action = "/conversation/newnode";
     return res.render('newnode_form', data);
 });
 
@@ -117,7 +121,7 @@ router.get("/newcon/:id", function(req, res, next) {
     data.hidden_1 = id;
     data.hidden_2 = constants.CON_NODE_TYPE;
     data.formtitle = "New Con Argument Node";
-    data.action = "/conversation/newnode"
+    data.action = "/conversation/newnode";
     return res.render('newnode_form', data);
 });
 
@@ -128,7 +132,7 @@ router.get("/newnote/:id", function(req, res, next) {
     data.hidden_1 = id;
     data.hidden_2 = constants.NOTE_NODE_TYPE;
     data.formtitle = "New Note Node";
-    data.action = "/conversation/newnode"
+    data.action = "/conversation/newnode";
     return res.render('newnode_form', data);
 });
 
