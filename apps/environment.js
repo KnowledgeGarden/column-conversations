@@ -8,6 +8,7 @@ var CommonModel = require('./models/common_model');
 var TagModel = require('./models/tag_model');
 var ConversationModel = require('./models/conversation_model');
 var EventLogModel = require('./models/eventlog_model');
+var BookmarkModel = require('./models/bookmark_model');
 
 Environment = function() {
     var self = this;
@@ -15,6 +16,7 @@ Environment = function() {
     ConversationModel.inject(CommonModel, EventLogModel);
     TagModel.inject(CommonModel);
     EventLogModel.inject(CommonModel);
+    BookmarkModel.inject(CommonModel);
         
 };
 module.exports = Environment;
