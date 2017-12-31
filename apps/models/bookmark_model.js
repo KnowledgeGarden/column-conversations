@@ -1,12 +1,17 @@
 var constants = require('../constants');
 var Database = require('../drivers/file_database_driver');
-var CommonModel = require('./common_model');
+const environment = require('../environment');
+var CommonModel; // = environment.CommonModel;
 var Bookmark,
     instance;
 
 Bookmark = function() {
     var self = this;
 
+    self.inject = function(commModel) {
+        CommonModel = commModel;
+    //    console.log("BookmarkModel",environment,CommonModel);        
+    };
 //    console.log("Bookmark",CommonModel);
     /**
      * Create a new bookmark (aka WebClip)
@@ -19,11 +24,12 @@ Bookmark = function() {
      */
     self.newBookmark = function(creatorId, url, statement, details, callback) {
 //        console.log("BookmarkModel.newBookmark",creatorId,url,statement);
-        var node = CommonModel.newNode(creatorId, constants.BOOKMARK_NODE_TYPE, statement, details)
-        node.url = url;
-//        console.log("BookmarkModel.newBookmark-1"+node);
-        Database.saveBookmarkData(node.id, node, function(err) {
-            return callback(err);
+        CommonModel.newNode(creatorId, constants.BOOKMARK_NODE_TYPE, statement, details, function(node) {
+            node.url = url;
+    //        console.log("BookmarkModel.newBookmark-1"+node);
+            Database.saveBookmarkData(node.id, node, function(err) {
+                return callback(err);
+            });
         });
     };
 

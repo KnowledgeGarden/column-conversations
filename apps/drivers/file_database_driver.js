@@ -198,6 +198,64 @@ FileDatabase = function() {
     // Events
     ////////////////////////
 
+    /**
+     * @param struct
+     * @param callback err
+     */
+    self.saveRecent = function(struct, callback) {
+        console.log("Database.saveRecent",struct);
+        var json = readFile(RecentEventsPath);
+        if (!json) {
+            json = [];
+        }
+        json.push(struct);
+        fs.writeFile(RecentEventsPath, 
+                JSON.stringify(json), function(err) {
+            console.log("Database.saveRecent-1",err,json);
+            return callback(err);
+        });         
+    };
+
+    self.saveHistory = function(struct, callback) {
+        console.log("Database.saveHistory",struct);
+        var json = readFile(HistoryPath);
+        if (!json) {
+            json = [];
+        }
+        json.push(struct);
+        fs.writeFile(HistoryPath, 
+                JSON.stringify(json), function(err) {
+            console.log("Database.saveHistory-1",err,json);
+            return callback(err);
+        });         
+    };
+
+    /**
+     * @param count
+     * @param callback data can be empty list
+     */
+    self.listRecents = function(count, callback) {
+        var result = [];
+        var json = readFile(RecentEventsPath);
+        console.log("Database.listRecents",count,json);
+        if (!json) {
+            return callback(result);
+        }
+        var rev = json.reverse();
+        var len = json.length;
+        if (len > count) {
+            len = count;
+        }
+        for (var i = 0; i <len; i++) {
+            result.push(json[i]);
+        }
+        return callback(result);
+    };
+
+    self.listHistory = function(start, count, callback) {
+
+    };
+
 
 };
 instance = new FileDatabase();

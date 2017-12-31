@@ -8,6 +8,8 @@ var uuid = require('uuid');
 var flash = require("connect-flash");
 var session = require("express-session");
 
+//environment
+var environment = new require('./apps/environment')();
 //routes
 var Indx = require('./routes/index');
 var Conv = require('./routes/convo');

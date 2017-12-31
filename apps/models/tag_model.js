@@ -1,7 +1,8 @@
 const DataPath = "../../data/";
 const TagPath = DataPath+"tags/";
 var Database = require('../drivers/file_database_driver');
-var CommonModel = require('./common_model');
+const environment = require('../environment');
+var CommonModel; // = environment.CommonModel;
 var uuid = require('uuid');
 var constants = require('../constants');
 var Tags,
@@ -10,7 +11,10 @@ var Tags,
 Tags = function() {
     var self = this;
 
-
+    self.inject = function(commModel) {
+        CommonModel = commModel;
+    //    console.log("TagModel",environment,CommonModel);
+    }
     /**
      * Fetch a tag
      * @param {*} viewId 
@@ -88,16 +92,19 @@ Tags = function() {
         var id = labelToId(tagLabel);
         self.fetchTag(id, function(err, data) {
             console.log("TagModel.newTag",tagLabel,id,data);
-            var theTag;
             if (data) {
-                theTag = data;
+                var theTag = data;
+                wireTagNode(theTag, nodeId);
+                console.log("TagModel.newTag-1",theTag);
+                return callback(err);
             } else {
-                theTag = CommonModel.newNode(creatorId, constants.TAG_NODE_TYPE, tagLabel, "" );
-                theTag.id = id;
+                CommonModel.newNode(creatorId, constants.TAG_NODE_TYPE, tagLabel, "", function(theTag) {
+                    theTag.id = id;
+                    wireTagNode(theTag, nodeId);
+                    console.log("TagModel.newTag-1",theTag);
+                    return callback(err);
+                });
             }
-            wireTagNode(theTag, nodeId);
-            console.log("TagModel.newTag-1",theTag);
-            return callback(err);
         });
     };
 

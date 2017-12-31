@@ -1,7 +1,9 @@
 const DataPath = "../../data/";
+const environment = require('../environment');
 const ConversationPath = DataPath+"conversations/";
 var Database = require('../drivers/file_database_driver');
-var CommonModel = require('./common_model');
+var CommonModel = environment.CommonModel;
+var EventModel = environment.EventLogModel;
 var uuid = require('uuid');
 var constants = require('../constants');
 var Conversation,
@@ -10,6 +12,11 @@ var Conversation,
 Conversation = function() {
     var self = this;
 
+    self.inject = function(commModel, eventModel) {
+        CommonModel = commModel;
+        EventModel = eventModel;
+    //    console.log("ConversationModel",environment,CommonModel,EventModel);
+    };
 
     /**
      * Fetch a node
@@ -36,28 +43,6 @@ Conversation = function() {
         });
     };
 
-
-    ///////////////////////
-    //TODO
-    // Will be adding creationDate
-    // Will be adding creatorId
-    // Will be looking at a "journal" field which is
-    //  the node's action history
-    ///////////////////////
-    /**
-     * create a new node and save it
-     * @param creatorId
-     * @param {*} type 
-     * @param {*} statement 
-     * @param {*} details 
-     * @param {*} callback err, nodeId
-     */
-    self.newNode = function(creatorId, type, statement, details, callback) {
-        var node = CommonModel.newNode(creatorId, type, statement, details);
-        Database.saveNodeData(node.id, node, function(err) {
-            return callback(err, id);
-        });
-    };
 
     //////////////////////////////
     // TODO
@@ -86,20 +71,22 @@ Conversation = function() {
      */
     self.newResponseNode = function(creatorId, parentId, type, statement, details, callback) {
        Database.fetchData(parentId, function(err, data) {
-            console.log("ConversationModel.newResponseNode",parentId,data);
-            var node = CommonModel.newNode(creatorId, type, statement, details);
-            CommonModel.addStructToNode(type, node, data);
-            // We cannot just do a "saveNodeData"
-            // because we do not know what the parent nodetype is
-            var parentType = data.type;
-            Database.saveNodeData(parentId, data, function(err) {
-                Database.saveNodeData(node.id, node, function(ex) {
-                    return callback(ex);
+            console.log("ConversationModel.newResponseNode",type,parentId,data);
+            CommonModel.newNode(creatorId, type, statement, details, function(node) {
+                console.log("ConversationModel.newResponseNode-1",type,node);
+                CommonModel.addStructToNode(type, node, data);
+                // We cannot just do a "saveNodeData"
+                // because we do not know what the parent nodetype is
+                var parentType = data.type;
+                Database.saveNodeData(parentId, data, function(err) {
+                    Database.saveNodeData(node.id, node, function(ex) {
+                        return callback(ex);
+                    });
                 });
             });
         });
-        //});
     };
+
     /**
      * Create a new conversation and its root node
      * @param creatorId
@@ -112,21 +99,22 @@ Conversation = function() {
      */
     self.newConversation = function(creatorId, title, details, type, roottitle, rootdetails, callback) {
         //first, create the root node
-        var json = CommonModel.newNode(creatorId, type, roottitle, rootdetails),
-            id = json.id,
-            xroot;
-        console.log("ConModelNewConvo",type);
-        Database.saveNodeData(json.id, json, function(err) {
-            //now create the conversation
-            xroot = {};
-            xroot.id = id;
-            xroot.type = type;
-            xroot.statement = roottitle;
-            json = CommonModel.newNode(creatorId, constants.CONVERSATION_NODE_TYPE, title, details);
-            json.rootNode = xroot;
-            Database.saveConversationData(json.id, json, function(err) {
-                console.log("ModelNewConversation", title, err);            
-                return callback(id);
+        CommonModel.newNode(creatorId, type, roottitle, rootdetails, function(json) {
+            var id = json.id,
+                xroot;
+            console.log("ConModelNewConvo",type);
+            Database.saveNodeData(json.id, json, function(err) {
+                //now create the conversation
+                xroot = {};
+                xroot.id = id;
+                xroot.type = type;
+                xroot.statement = roottitle;
+                json = CommonModel.newNode(creatorId, constants.CONVERSATION_NODE_TYPE, title, details);
+                json.rootNode = xroot;
+                Database.saveConversationData(json.id, json, function(err) {
+                    console.log("ModelNewConversation", title, err);            
+                    return callback(id);
+                });
             });
         });
     };

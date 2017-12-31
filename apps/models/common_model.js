@@ -1,9 +1,16 @@
 var constants = require('../constants');
+var environment = require('../environment');
+var EventLogModel; // = environment.EventLogModel;
 var Common,
     instance;
 
 Common = function() {
     var self = this;
+
+    self.inject = function(eventModel) {
+        EventLogModel = eventModel;
+    //    console.log("CommonModel",environment,EventLogModel);
+    }
 
     // user UUIDs for Node IDs
     // TODO not used
@@ -89,9 +96,9 @@ Common = function() {
      * @param {*} type 
      * @param {*} statement 
      * @param {*} details 
-     * @returns
+     * @param callback json
      */
-    self.newNode = function(creatorId, type, statement, details) {
+    self.newNode = function(creatorId, type, statement, details, callback) {
         console.log("CommonModel.newNode"+creatorId,type);
         var result = {};
         result.id = self.newId();
@@ -102,8 +109,10 @@ Common = function() {
         result.img = self.nodeTolargeIcon(type);
         result.statement = statement;
         result.details = details;
-        console.log("CommonModel.newNode",result);
-        return result;
+        EventLogModel.registerEvent(creatorId, constants.NEW_NODE_EVENT, result, function(err) {
+            console.log("CommonModel.newNode",creatorId,type,result);
+            return callback(result);
+        });
     };
 
     /**
@@ -170,7 +179,7 @@ Common = function() {
     };
 
     /**
-     * Add a child struct to a tiven node
+     * Add a child struct to a given node
      * @param {*} childType 
      * @param {*} sourceNode 
      * @param {*} targetNode 

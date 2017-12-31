@@ -13,8 +13,8 @@ Helper = function() {
      */
     self.startData = function(req) {
 //        console.log("Helper.startData",req.session);
-        
-        var result = { title: 'ColCon' };
+        var title = 'Column Conversation Testbed'; //TODO move to config.json
+        var result = { title: title };
         if (req.flash) {
             result.flashMsg = req.flash("error") || req.flash("success");
         }

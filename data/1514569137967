@@ -1,1 +1,1 @@
-{"id":"1514569137967","creatorId":"joe","createdDate":"2017-12-29T17:38:57.967Z","version":"1514569137967","type":"QuestionNodeType","img":"/images/ibis/issue.png","statement":"A Nested Question","details":""}
+{"id":"1514569137967","creatorId":"joe","createdDate":"2017-12-29T17:38:57.967Z","version":"1514569137967","type":"QuestionNodeType","img":"/images/ibis/issue.png","statement":"A Nested Question","details":"","questions":[{"id":"1514754324303","img":"/images/ibis/issue_sm.png","type":"QuestionNodeType","statement":"How is this yet another great question?"}]}
