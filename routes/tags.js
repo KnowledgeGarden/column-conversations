@@ -16,28 +16,45 @@ router.get("/newtag/:id", function(req, res, next) {
         id = req.params.id;
     console.log("NewTag",id);
     data.hidden_1 = id;
+    data.taglist = TagModel.listTags();
+
    return res.render('newtag_form', data);
 });
 
 router.get("/gettag/:id", function(req, res, next) {
     var id = req.params.id,
         data = helper.startData(req);
-    console.log("TAGGET",id);
+    console.log("Tags.getTag",id);
     TagModel.fetchTag(id, function(err, result) {
         data.result = result;
         return res.render('tag_view', data);
     });
 });
 
+/**
+ * Add tags to some node
+ */
 router.post("/newnode", function(req, res, next) {
     var label = req.body.title
-        details = req.body.details,
+        selections = req.body.selectedtags,
         parentId = req.body.hidden_1,
-        type = constants.TAG_NODE_TYPE,
-        creatorId = req.session.theUser; //constants.TEST_CREATOR; //TODO
-    console.log("NT", JSON.stringify(req.body));
-    TagModel.newTag(creatorId, label, parentId, function(err) {
-        return res.redirect('/conversation/'+parentId)        
+        creatorId = req.session.theUser;
+    console.log("NT",req.body);
+    TagModel.addTags(creatorId, label, selections, parentId, function(err, type) {
+        // "type" because we don't know what kind of node was just tagged
+        // here, we are using redirects; could just mimic their route renders
+        // but then have to do all the fetching, etc
+        console.log("Tags.newnode",parentId,type);
+        if (type === constants.BOOKMARK_NODE_TYPE) {
+            return res.redirect('/bookmark/'+parentId);
+        //  } else if (type === constants.TAG_NODE_TYPE) {
+        //    return res.redirect('/tags/gettag/'+id);
+        } else if (type === constants.CONVERSATION_NODE_TYPE) {
+            return res.redirect('/conversation/fetchconversation/'+parentId);
+        } else { 
+              //TODO MUST add other redirects if other apps added
+            return res.redirect('/conversation/'+parentId);
+        }
     });
 });
 

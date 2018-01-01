@@ -21,9 +21,10 @@ FileDatabase = function() {
      * @param {*} path 
      * @param {*} callback err, data
      */
-    function readFile(path) {
+    function readFile(path, callback) {
         console.log("Database.readFile",path);
-        var json;
+        var json,
+            error;
         try {
             var f = fs.readFileSync(path);
 //          console.log("Database.readFile-1",f);
@@ -34,11 +35,14 @@ FileDatabase = function() {
 //                  console.log("Database.readFile-3",json);
                 } catch (e) {
                     console.log("Database.readFile error",path,e);
+                    error = e;
+                    //e.g.
+                    //Database.readFile error ./data/1514763456472 SyntaxError: Unexpected end of JSON input
                 }
             }
         } catch (x) {}
 //        console.log("Database.readFile-4",json);
-        return json;
+        return callback(error, json);
     };
 
     /**
@@ -61,8 +65,10 @@ FileDatabase = function() {
     ////////////////////////
     self.fetchConversation = function(conId, callback) {
         var path = ConversationPath+conId;
-        var result = readFile(path);
-        return callback(null, result);
+        readFile(path, function(err, data) {
+            return callback(err, data);
+        });
+        
     };
     /**
      * Save conversation data
@@ -71,7 +77,7 @@ FileDatabase = function() {
      * @param {*} callback err
      */
     self.saveConversationData = function(id, json, callback) {
-        console.log("DatabaseSaveConversationData",id, JSON.stringify(json));
+        console.log("DatabaseSaveConversationData",id,json);
         fs.writeFile(ConversationPath+id, 
                 JSON.stringify(json), function(err) {
             return callback(err);
@@ -114,19 +120,21 @@ FileDatabase = function() {
         });
     };
 
-    /** do not need this 
+    
     self.saveData = function(nodeId,json, callback) {
+        console.log("Database.saveData",json);
         var type = json.type;
         if (type === constants.BOOKMARK_NODE_TYPE) {
             self.saveBookmarkData(nodeId, json, function(err) {
                 return callback(err);
             });
-        } //TODO ADD OTHER TYPES, e.g. Blog, etc
-        // fall through
-        self.saveNodeData(nodeId, json, function(err) {
-            return callback(err);
-        });
-    };**/
+        } else {//TODO ADD OTHER TYPES, e.g. Blog, etc
+            //default conversation nodes
+            self.saveNodeData(nodeId, json, function(err) {
+                return callback(err);
+            });
+        }
+    };
     ////////////////////////
     // Conversation Nodes
     ////////////////////////
@@ -138,8 +146,10 @@ FileDatabase = function() {
      */
     self.fetchNode = function(nodeId, callback) {
         var path = DataPath+nodeId;
-        var result = readFile(path);
-        return callback(null, result);
+        readFile(path, function(err, data) {
+            return callback(err, data);
+        });
+       
     };
 
     /**
@@ -149,7 +159,7 @@ FileDatabase = function() {
      * @param {*} callback error or undefined
      */
     self.saveNodeData = function(id, json, callback) {
-        console.log("DatabaseSaveNodeData",id, JSON.stringify(json));
+        console.log("DatabaseSaveNodeData",id,json);
         fs.writeFile(DataPath+id, 
                 JSON.stringify(json), function(err) {
             return callback(err);
@@ -167,12 +177,13 @@ FileDatabase = function() {
      */
     self.fetchTag = function(id, callback) {
         var path = TagPath+id;
-        var result = readFile(path);
-        return callback(null, result);
-    };
+        readFile(path, function(err, data) {
+            return callback(err, data);
+        });
+     };
 
     self.saveTagData = function(id, json, callback) {
-        console.log("DatabaseSaveTagData",id, JSON.stringify(json));
+        console.log("DatabaseSaveTagData",id,json);
         fs.writeFile(TagPath+id, 
                 JSON.stringify(json), function(err) {
             return callback(err);
@@ -189,9 +200,9 @@ FileDatabase = function() {
 
     self.fetchBookmark = function(id, callback) {
         var path = BookmarkPath+id;
-        var result = readFile(path);
-        console.log("Database.fetchBookmark",id,result);
-        return callback(null, result);
+        readFile(path, function(err, data) {
+            return callback(err, data);
+        });
     };
 
     self.saveBookmarkData = function(id, json, callback) {
@@ -216,56 +227,75 @@ FileDatabase = function() {
      */
     self.saveRecent = function(struct, callback) {
         console.log("Database.saveRecent",struct);
-        var json = readFile(RecentEventsPath);
-        if (!json) {
-            json = [];
-        }
-        json.push(struct);
-        fs.writeFile(RecentEventsPath, 
-                JSON.stringify(json), function(err) {
-            console.log("Database.saveRecent-1",err,json);
-            return callback(err);
-        });         
+        readFile(RecentEventsPath, function(err, json) {
+            if (!json) {
+                json = [];
+            }
+            json.push(struct);
+            fs.writeFile(RecentEventsPath, 
+                    JSON.stringify(json), function(err) {
+                console.log("Database.saveRecent-1",err,json);
+                return callback(err);
+            });         
+        });
     };
 
     self.saveHistory = function(struct, callback) {
         console.log("Database.saveHistory",struct);
-        var json = readFile(HistoryPath);
-        if (!json) {
-            json = [];
-        }
-        json.push(struct);
-        fs.writeFile(HistoryPath, 
-                JSON.stringify(json), function(err) {
-            console.log("Database.saveHistory-1",err,json);
-            return callback(err);
-        });         
+        readFile(HistoryPath, function(err, json) {
+            if (!json) {
+                json = [];
+            }
+            json.push(struct);
+            fs.writeFile(HistoryPath, 
+                    JSON.stringify(json), function(err) {
+                console.log("Database.saveHistory-1",err,json);
+                return callback(err);
+            });
+        });      
     };
 
     /**
+     * Reverses order, last first
      * @param count
      * @param callback data can be empty list
      */
     self.listRecents = function(count, callback) {
         var result = [];
-        var json = readFile(RecentEventsPath);
-        console.log("Database.listRecents",count,json);
-        if (!json) {
+        readFile(RecentEventsPath, function(err, json) {
+            console.log("Database.listRecents",count,json);
+            if (!json) {
+                return callback(result);
+            }
+            var rev = json.reverse();
+            var len = json.length;
+            if (len > count) {
+                len = count;
+            }
+            for (var i = 0; i <len; i++) {
+                result.push(json[i]);
+            }
             return callback(result);
-        }
-        var rev = json.reverse();
-        var len = json.length;
-        if (len > count) {
-            len = count;
-        }
-        for (var i = 0; i <len; i++) {
-            result.push(json[i]);
-        }
-        return callback(result);
+        });
     };
 
     self.listHistory = function(start, count, callback) {
-
+        var result = [];
+        readFile(HistoryPath, function(err, json) {
+            console.log("Database.listHistory",count,json);
+            if (!json) {
+                return callback(result);
+            }
+//            var rev = json.reverse();
+            var len = json.length;
+            if (len > count) {
+                len = count;
+            }
+            for (var i = start; i <len; i++) {
+                result.push(json[i]);
+            }
+            return callback(result);
+        });
     };
 
 

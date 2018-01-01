@@ -34,6 +34,22 @@
     border-radius: 3px;
 }
 
+#newtagview {
+    column-count:2;
+    margin-left:10px;
+}
+#tagform {
+    column-width:70%;
+    height:500px;
+}
+#taglist {
+    border: 1px solid black;
+    column-width:29%;
+    white-space:nowrap;
+    overflow-x: scroll; 
+    overflow-y: hidden;
+    height:500px;   
+}
 /**
  * Enable columns to scroll right and left
  */

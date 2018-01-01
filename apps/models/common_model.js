@@ -152,12 +152,12 @@ Common = function() {
                     throw "Bad Type 3 "+type;
             } 
         } catch (e) {}
-        console.log("ConModel.getChildList",type,result,JSON.stringify(node));     
+        console.log("ConModel.getChildList",type,result,node);     
         return result;
     };
 
     self.setChildList = function (type, list, node) {
-        console.log("ConModel.setChildList",type,list,JSON.stringify(node));
+        console.log("ConModel.setChildList",type,list,node);
         if (type === constants.ANSWER_NODE_TYPE) {
             node.answers = list;
         } else if (type === constants.CON_NODE_TYPE) {

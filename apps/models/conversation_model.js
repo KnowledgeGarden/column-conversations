@@ -70,15 +70,17 @@ Conversation = function() {
      * @param {*} callback 
      */
     self.newResponseNode = function(creatorId, parentId, type, statement, details, callback) {
-       Database.fetchData(parentId, function(err, data) {
-            console.log("ConversationModel.newResponseNode",type,parentId,data);
+       Database.fetchData(parentId, function(err, parent) {
+            console.log("ConversationModel.newResponseNode",type,parentId,parent);
             CommonModel.newNode(null, creatorId, type, statement, details, function(node) {
                 console.log("ConversationModel.newResponseNode-1",type,node);
-                CommonModel.addStructToNode(type, node, data);
+                CommonModel.addStructToNode(type, node, parent);
                 // We cannot just do a "saveNodeData"
                 // because we do not know what the parent nodetype is
-                var parentType = data.type;
-                Database.saveNodeData(parentId, data, function(err) {
+                var parentType = parent.type;
+                //update parent's version
+                parent.version = CommonModel.newId();
+                Database.saveNodeData(parentId, parent, function(err) {
                     Database.saveNodeData(node.id, node, function(ex) {
                         return callback(ex);
                     });
@@ -126,7 +128,7 @@ Conversation = function() {
      */
     self.listConversations = function() {
         var fileNames= Database.listConversations();
-        console.log("LISTS",JSON.stringify(fileNames));
+        console.log("LISTS",fileNames);
         var result = [],
             temp,
             con;
@@ -136,7 +138,7 @@ Conversation = function() {
         fileNames.forEach(function(fx) {
             if (!fx.includes(".DS_Store")) { // mac file system
                 self.fetchConversation(fx, function(thecon) {
-                    console.log("FE", fx, JSON.stringify(thecon));
+                    console.log("FE", fx, thecon);
                     con = {};
                     con.id = thecon.id;
                     con.img = thecon.img;

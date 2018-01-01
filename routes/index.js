@@ -15,6 +15,10 @@ router.get('/', function(req, res, next) {
   });
 });
 
+/**
+ * This turns out to be an important vehicle for fetching a node
+ * when you only know its id and its type.
+ */
 router.get('/fetch/:id/:type', function(req, res, next) {
   var id = req.params.id,
       type = req.params.type;

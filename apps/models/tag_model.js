@@ -15,6 +15,7 @@ Tags = function() {
         CommonModel = commModel;
     //    console.log("TagModel",environment,CommonModel);
     }
+
     /**
      * Fetch a tag
      * @param {*} viewId 
@@ -49,67 +50,121 @@ Tags = function() {
     // When a node is tagged, both the node and the
     // tag know about it, using the "tags" field in each
     ////////////////////
-    function addNodeToTag(node, tag) {
-        console.log("TagModel.addNodeToTag",node,tag);
+    /**
+     * Wire tag to node
+     * Don't save the node data since it will be saved
+     * by the calling stack
+     * @param {*} tag 
+     * @param {*} node 
+     * @param {*} callback 
+     */
+    function wireTagNode(tag, node, callback) {
+        console.log("TagModel.wireTagNode", node, tag);
         CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
-        var kids = CommonModel.getChildList(constants.TAG_NODE_TYPE, tag);
-        if (!kids) {
-            kids = [];
-        }    
-        var struct = {};
-        struct.id = node.id;
-        struct.type = node.type;
-        struct.statement = node.statement;
-        kids.push(struct);
-        CommonModel.setChildList(tag.type, kids, tag);
-    };
-
-    function wireTagNode(tag, nodeId) {
-        console.log("TagModel.wireTagNode", nodeId, JSON.stringify(tag));
-        //fetch node
-        Database.fetchData(nodeId, function(err, node) {
-            CommonModel.addStructToNode(constants.TAG_NODE_TYPE, node, tag);
-            CommonModel.addStructToNode(constants.TAG_NODE_TYPE, tag, node);
-            Database.saveNodeData(nodeId, node, function(err) {
-                console.log("TagModel.wireTagNode-1"+JSON.stringify(tag));
-                Database.saveTagData(tag.id, tag, function(err) {
-                    return;
-                });
-            });
+        CommonModel.addStructToNode(constants.TAG_NODE_TYPE, tag, node);
+        console.log("TagModel.wireTagNode-1",tag,node);
+        Database.saveTagData(tag.id, tag, function(err) {
+            return callback(err);
         });
     };
 
     /**
      * We are defining a tag against a particular node.
      * If that tag already exists, we don't make it again;
-     *   instead, we simply add the new node to it's list of nodes
+     *   instead, we simply add the new node to its list of nodes
      * @param creatorId
      * @param {*} tagLabel 
-     * @param {*} nodeId 
+     * @param {*} node 
      * @param {*} callback err
      */
-    self.newTag = function(creatorId, tagLabel, nodeId, callback) {
+    self.newTag = function(creatorId, tagLabel, node, callback) {
+        if (tagLabel === '') {
+            return callback("Missing tag label");
+        }
+        //label to tag id
         var id = labelToId(tagLabel);
-        self.fetchTag(id, function(err, data) {
-            console.log("TagModel.newTag",tagLabel,id,data);
-            if (data) {
-                var theTag = data;
-                wireTagNode(theTag, nodeId);
-                console.log("TagModel.newTag-1",theTag);
-                return callback(err);
-            } else {
-                CommonModel.newNode(id, creatorId, constants.TAG_NODE_TYPE, tagLabel, "", function(theTag) {
-                    wireTagNode(theTag, nodeId);
-                    console.log("TagModel.newTag-1",theTag);
+        //Do we already have this tag?
+        Database.fetchTag(id, function(err, aTag) {
+            console.log("TagModel.newTag",tagLabel,id,aTag);
+            if (aTag) {
+                wireTagNode(aTag, node, function(err) {
+                    console.log("TagModel.newTag-1",aTag);
                     return callback(err);
+                });
+            } else { // new tag
+                CommonModel.newNode(id, creatorId, constants.TAG_NODE_TYPE, tagLabel, "", function(theTag) {
+                    wireTagNode(theTag, node, function(err) {
+                        console.log("TagModel.newTag-2",theTag,node);
+                        return callback(err);
+                    });
                 });
             }
         });
     };
 
+    function tagHandler(tagNameArray, creatorId, node, callback) {
+        var error;
+        function next() {
+            console.log("TagModel.tagHandler",tagNameArray);
+            if (tagNameArray.length === 0) {
+                return callback(error);
+            }
+            lx = tagNameArray.pop();
+            if (lx && lx !== '') {
+                console.log("TagModel.tagHandler-1",lx,tagNameArray);
+                self.newTag(creatorId, lx, node, function(err) {
+                    if (!error && err) {
+                        error = err;
+                    }
+                    next();
+                });
+            } else {
+                next();
+            }
+        }
+        //kickstart
+        next();
+    };
+
+    /**
+     * Handle a new tag event, which can include one or several selected tags
+     * @param {*} creatorId 
+     * @param {*} tagLabel 
+     * @param {*} selectedLabels comma separated list
+     * @param {*} nodeId 
+     * @param {*} callback err. nodetype
+     */
+    self.addTags = function(creatorId, tagLabel, selectedLabels, nodeId, callback) {
+        console.log("TagModel.addTags",tagLabel, selectedLabels);
+        var ta = selectedLabels.split(',');
+        var labels = tagLabel;
+        var len = ta.length;
+        var labelArray = [];
+        labelArray.push(tagLabel);
+        if (len > 0) {
+            for (var i=0;i<len;i++) {
+                labelArray.push(ta[i].trim());
+            }
+        }
+        console.log("TagModel.addTags-1",labelArray);
+        Database.fetchData(nodeId, function(err, node) {
+
+            var type = node.type;
+            tagHandler(labelArray, creatorId, node, function(error) {
+                //update the node's version
+                node.version = CommonModel.newId();
+                console.log("TagModel.addTags-3",node);
+                //save the node
+                Database.saveData(nodeId, node, function(err) {
+                    return callback(error, type);
+                });
+            });
+        });
+    }
+
     self.listTags = function() {
         var fileNames = Database.listTags();
-        console.log("TAGLISTS",JSON.stringify(fileNames));
+        console.log("TagModel.listTags",fileNames);
         var result = [],
             temp,
             con;
