@@ -5,9 +5,12 @@
         {{#if isAuthenticated}}
             <p><a  href="/conversation/newconversation"><b>New Conversation</b></a></p>
         {{/if}}
-        {{#each conlist}}
-            <a href="/conversation/fetchconversation/{{id}}">{{statement}}</a><br/>
-        {{/each}}
+        <div style="overflow-y: auto; height:300px;">
+
+            {{#each conlist}}
+                <a href="/conversation/fetchconversation/{{id}}"><img style="margin-right: 4px;" src="{{img}}">{{statement}}</a><br/>
+            {{/each}}
+        </div>
     </div>
 
 </div>

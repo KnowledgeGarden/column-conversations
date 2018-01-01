@@ -2,10 +2,12 @@
     <div style="margin-left: 10px;">
 
         <h2><img style="margin-right: 4px" src="/images/bookmark.png">Bookmarks</h2>
+        <div style="overflow-y: auto; height:300px;">
 
-        {{#each bookmarklist}}
-            <a href="/bookmark/{{id}}">{{statement}}</a><br/>
-        {{/each}}
+            {{#each bookmarklist}}
+                <a href="/bookmark/{{id}}"><img style="margin-right: 4px;" src="{{img}}">{{statement}}</a><br/>
+            {{/each}}
+        </div>
     </div>
 
 </div>
