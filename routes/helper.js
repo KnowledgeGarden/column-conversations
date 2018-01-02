@@ -23,6 +23,8 @@ Helper = function() {
         }
         //current conversation
         result.curCon = req.session.curCon;
+        //remembered
+        result.isRemembered = req.session.transclude;
 //        console.log("XYZ-2",req.session.curCon,req.session.theUser);
         return result;
     };

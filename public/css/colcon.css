@@ -70,10 +70,10 @@
  * The formula seems to be column width * num colums + 100px
  */
 .columncontainer {
-	width: 2200px;
+	width: 2500px;
 }
 .datacontainer {
-    width: 2200px;
+    width: 2500px;
 }
 
 .headerimage {

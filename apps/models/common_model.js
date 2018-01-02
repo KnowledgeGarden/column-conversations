@@ -45,7 +45,7 @@ Common = function() {
             return "/images/tag_sm.png";
         } else if (type === constants.DECISION_NODE_TYPE) {
             return "/images/ibis/decision_sm.png";
-        } else if (type === constants.RELATIONS_NODE_TYPE) {
+        } else if (type === constants.RELATION_NODE_TYPE) {
             return "/images/cogwheel_sm.png";
         } else if (type === constants.BOOKMARK_NODE_TYPE) {
             return "/images/bookmark_sm.png";
@@ -76,7 +76,7 @@ Common = function() {
             return "/images/tag.png";
         } else if (type === constants.DECISION_NODE_TYPE) {
             return "/images/ibis/decision.png";
-        } else if (type === constants.RELATIONS_NODE_TYPE) {
+        } else if (type === constants.RELATION_NODE_TYPE) {
             return "/images/cogwheel.png";
         } else if (type === constants.BOOKMARK_NODE_TYPE) {
             return "/images/bookmark.png";
@@ -123,7 +123,8 @@ Common = function() {
     /**
      * Refer to constants.js for fields
      * @param {*} type 
-     * @param {*} node 
+     * @param {*} node
+     * @return possibly empty array
      */
     self.getChildList = function (type, node) {
         var result;
@@ -144,7 +145,7 @@ Common = function() {
                 result = node.tags;
             } else if (type === constants.DECISION_NODE_TYPE) {
                 result = node.decisions;
-            } else if (type === constants.RELATIONS_NODE_TYPE) {
+            } else if (type === constants.RELATION_NODE_TYPE) {
                 result = node.relations;
             } else if (type === constants.BOOKMARKS_NODE_TYPE) {
                 result = node.bookmarks;
@@ -152,6 +153,9 @@ Common = function() {
                     throw "Bad Type 3 "+type;
             } 
         } catch (e) {}
+        if (!result) {
+            result = [];
+        }
         console.log("ConModel.getChildList",type,result,node);     
         return result;
     };
@@ -174,14 +178,15 @@ Common = function() {
             node.tags = list;
         } else if (type === constants.DECISIONS_NODE_TYPE) {
             node.decisions = list;
-        } else if (type === constants.RELATIONS_NODE_TYPE) {
-            node.RELATIONS_NODE_TYPE = list;
+        } else if (type === constants.RELATION_NODE_TYPE) {
+            node.relations = list;
         } else if (type === constants.BOOKMARKS_NODE_TYPE) {
             node.bookmarks = list;
         } else {
             throw "Bad Type 4 "+type;
         }
     };
+
 
     /**
      * Add a child struct to a given node
@@ -205,7 +210,6 @@ Common = function() {
         kids.push(struct);
         self.setChildList(childType, kids, targetNode);
     };
-
 };
 //noticed that if you call a class > 1 times, best to
 // just send a singleton

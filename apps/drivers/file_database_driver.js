@@ -3,8 +3,10 @@ var constants = require('../constants');
 
 /** Paths */
 const DataPath = "./data/";
+const ResourcePath = "./resources/";
 const ConversationPath = DataPath+"conversations/";
 const BookmarkPath = DataPath+"bookmarks/";
+const ConnectionPath = DataPath+"connections/";
 const EventLogPath = DataPath+"eventlog/";
 const RecentEventsPath = EventLogPath+"recentEvents.json";
 const HistoryPath = EventLogPath+"history.json";
@@ -98,6 +100,13 @@ FileDatabase = function() {
     //  We have to do this because of folder-based file types
     ////////////////////////
 
+    /**
+     * Fetch nearly any kind of node by trial and error
+     * Must be extended as new apps are added
+     * Note: does not presently check for Conversations (the Map node)
+     * @param {*} nodeId 
+     * @param {*} callback 
+     */
     self.fetchData = function(nodeId, callback) {
         //assume it's a conversation
         self.fetchNode(nodeId, function(err, data) {
@@ -110,9 +119,15 @@ FileDatabase = function() {
                     } else {
                         //TECHNICALLY SPEAKING, tags don't need to be here
                         self.fetchTag(nodeId, function(err2, data2) {
-                            return callback(err2, data2);
-                            //NOTE: if other models are added you must add
-                            // their fetch methods here
+                            if (data2) {
+                                return callback(err2, data2);
+                            } else {
+                                self.fetchConnection(nodeId, function(err3, data3) {
+                                    return callback(err3, data3);
+                                    //NOTE: if other models are added you must add
+                                    // their fetch methods here
+                                });
+                            }
                         });
                     }
                 });
@@ -120,12 +135,19 @@ FileDatabase = function() {
         });
     };
 
-    
+    /**
+     * Save any node type except tags or Conversation maps
+     * Must be extended as new apps are added
+     */    
     self.saveData = function(nodeId,json, callback) {
         console.log("Database.saveData",json);
         var type = json.type;
         if (type === constants.BOOKMARK_NODE_TYPE) {
             self.saveBookmarkData(nodeId, json, function(err) {
+                return callback(err);
+            });
+        } else if (type === constants.RELATION_NODE_TYPE) {
+            self.saveConnectionData(nodeId, json, function(err) {
                 return callback(err);
             });
         } else {//TODO ADD OTHER TYPES, e.g. Blog, etc
@@ -148,8 +170,7 @@ FileDatabase = function() {
         var path = DataPath+nodeId;
         readFile(path, function(err, data) {
             return callback(err, data);
-        });
-       
+        }); 
     };
 
     /**
@@ -164,6 +185,55 @@ FileDatabase = function() {
                 JSON.stringify(json), function(err) {
             return callback(err);
         }); 
+    };
+
+    ////////////////////////
+    // Connections
+    ////////////////////////
+
+    /**
+     * 
+     * @param {*} nodeId 
+     * @param {*} callback err data
+     */
+    self.fetchConnection = function(nodeId, callback) {
+        var path = ConnectionPath+nodeId;
+        readFile(path, function(err, data) {
+            console.log("Database.fetchConnectin",nodeId,err,data);
+            return callback(err, data);
+        });
+       
+    };
+
+    /**
+     * Save node data
+     * @param id
+     * @param {*} json 
+     * @param {*} callback error or undefined
+     */
+    self.saveConnectionData = function(id, json, callback) {
+        console.log("DatabaseSaveConnectionData",id,json);
+        fs.writeFile(ConnectionPath+id, 
+                JSON.stringify(json), function(err) {
+            return callback(err);
+        }); 
+    };
+
+    /**
+     * A connection resource is a tiny JSON file which describes
+     * a particular connection type identified by <code>id</code>
+     * @param {*} id 
+     * @param {*} callback 
+     */
+    self.fetchConnectionResource = function(id, callback) {
+        var path = ResourcePath+id;
+        readFile(path, function(err, data) {
+            return callback(err, data);
+        });
+    };
+
+    self.listConnections = function() {
+        return walkSync(ConnectionPath, []);
     };
 
     ////////////////////////

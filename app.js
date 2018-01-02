@@ -16,6 +16,7 @@ var Conv = require('./routes/convo');
 var users = require('./routes/users');
 var Tags = require('./routes/tags');
 var Bmk = require('./routes/bookmark')
+var Reln = require('./routes/connections');
 
 var app = express();
 var hbs = require('hbs');
@@ -48,6 +49,7 @@ app.use(session({
 app.use('/users', users);
 app.use('/bookmark/', Bmk);
 app.use('/tags', Tags);
+app.use("/connections", Reln);
 app.use('/conversation', Conv);
 // Index has to be last
 app.use('/', Indx);
