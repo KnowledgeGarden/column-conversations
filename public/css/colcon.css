@@ -1,3 +1,8 @@
+/**from jquery-ui.css*/
+.ui-widget {
+	font-family: Arial,Helvetica,sans-serif;
+	font-size: 1em;
+}
 
 .mcontainer {
     display: inline-block;
@@ -25,6 +30,7 @@
     height: 32px;
     vertical-align: middle;
 }
+
 #topbox {
 	width: 958px;
     border: 1px solid black;
