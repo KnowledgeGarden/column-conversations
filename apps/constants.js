@@ -44,6 +44,7 @@ module.exports.STATEMENT_FIELD              = "statement";
 //like the rich-text body field of a blog post
 module.exports.DETAILS_FIELD                = "details";
 module.exports.CREATOR_ID_FIELD             = "creatorId";
+module.exports.CREATED_DATE_FIELD           = "createdDate";
 //VERSION_FIELD will support optimistic locking for
 // concurrency if this platform is multi-user
 module.exports.VERSION_FIELD                = "version";
