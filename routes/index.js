@@ -31,6 +31,8 @@ router.get('/fetch/:id/:type', helper.isPrivate,function(req, res, next) {
     return res.redirect('/conversation/fetchconversation/'+id);
   } else if (type === constants.RELATION_NODE_TYPE) {
     return res.redirect('/connections/'+id);
+  } else if (type === constants.BLOG_NODE_TYPE) {
+    return res.redirect('/journal/'+id);
   } else {
     return res.redirect('/conversation/'+id);
   }
