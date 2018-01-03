@@ -143,10 +143,13 @@ FileDatabase = function() {
     };
 
     /**
-     * Save any node type except tags or Conversation maps
+     * Save any node type
      * Must be extended as new apps are added
+     * @param nodeId
+     * @param json
+     * @param callback err
      */    
-    self.saveData = function(nodeId,json, callback) {
+    self.saveData = function(nodeId, json, callback) {
         console.log("Database.saveData",json);
         var type = json.type;
         if (type === constants.BOOKMARK_NODE_TYPE) {
@@ -161,7 +164,15 @@ FileDatabase = function() {
             self.saveJournalData(nodeId, json, function(err) {
                 return callback(err);
             });
-         } else {//TODO ADD OTHER TYPES, e.g. Blog, etc
+        } else if (type === constants.TAG_NODE_TYPE) {
+            self.saveTagData(nodeId, json, function(err) {
+                return callback(err);
+            });
+        } else if (type === constants.CONVERSATION_NODE_TYPE) {
+            self.saveConversationData(nodeId, json, function(err) {
+                return callback(err);
+            });
+        } else {//TODO ADD OTHER TYPES, e.g. Blog, etc
             //default conversation nodes
             self.saveNodeData(nodeId, json, function(err) {
                 return callback(err);

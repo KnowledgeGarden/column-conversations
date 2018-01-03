@@ -4,7 +4,7 @@ var constants = require('../apps/constants');
 var JournalModel = require('../apps/models/journal_model');
 var helper = require('./helper');
 
-router.get("/journalindex", function(req, res, next) {
+router.get("/journalindex", helper.isPrivate, function(req, res, next) {
     req.session.curCon = null;
     var data = helper.startData(req);
     data.journallist = JournalModel.listJournalEntries();

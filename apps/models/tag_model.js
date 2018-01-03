@@ -174,12 +174,14 @@ Tags = function() {
         fileNames.forEach(function(fx) {
             if (!fx.includes(".DS_Store")) { // mac file system
                 self.fetchTag(fx, function(err, thecon) {
-                    console.log("TFE", fx, thecon);
-                    con = {};
-                    con.id = thecon.id;
-                    con.img = thecon.img;
-                    con.statement = thecon.statement;
-                    result.push(con);
+                    CommonModel.validateNodeImage(thecon, function() {
+                        console.log("TFE", fx, thecon);
+                        con = {};
+                        con.id = thecon.id;
+                        con.img = thecon.imgsm;
+                        con.statement = thecon.statement;
+                        result.push(con);
+                    });
                 });
             }
         });

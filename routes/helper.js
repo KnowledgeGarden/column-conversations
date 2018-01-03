@@ -7,6 +7,17 @@ Helper = function() {
     var self = this;
     //console.log("HELPER");
 
+    self.isPrivate = function (req, res, next) {
+        if (config.isPrivatePortal) {
+            if (self.isAuthenticated(req)) {
+                return next();
+            }
+            return res.redirect("/login");
+        } else {
+            return next();
+        }
+    };
+
     /**
      * Prefill a JSONObject with data for rendering
      * @return

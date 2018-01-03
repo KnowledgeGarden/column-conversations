@@ -8,7 +8,7 @@ var constants = require('../apps/constants');
 var BookmarkModel = require('../apps/models/bookmark_model');
 var helper = require('./helper');
 
-router.get("/bookmarkindex", function(req, res, next) {
+router.get("/bookmarkindex", helper.isPrivate, function(req, res, next) {
     req.session.curCon = null;
     var data = helper.startData(req);
     data.bookmarklist = BookmarkModel.listBookmarks();

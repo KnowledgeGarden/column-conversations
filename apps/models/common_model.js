@@ -1,6 +1,7 @@
 var constants = require('../constants');
 var environment = require('../environment');
-var EventLogModel; // = environment.EventLogModel;
+var Database = require('../drivers/file_database_driver');
+var EventLogModel;
 var Common,
     instance;
 
@@ -26,6 +27,25 @@ Common = function() {
     self.newId = function() {
         var d = new Date();
         return d.getTime().toString();
+    }
+
+    /**
+     * A temporary patch to be removed soon
+     * @param node
+     * @param callback ()
+     */
+    self.validateNodeImage = function(node, callback) {
+        var smallImage = node.imgsm;
+        if (!smallImage) {
+            smallImage = self.nodeToSmallIcon(node.type);
+            node.imgsm = smallImage;
+            node.version = self.newId();
+            Database.saveData(node.id, node, function(err) {
+                return callback();
+            });
+        } else {
+            return callback();
+        }
     }
 
     self.nodeToSmallIcon = function(type) {
@@ -116,6 +136,7 @@ Common = function() {
         result.version = self.newId();
         result.type = type;
         result.img = self.nodeTolargeIcon(type);
+        result.imgsm = self.nodeToSmallIcon(type);
         result.statement = statement;
         result.details = details;
         EventLogModel.registerEvent(creatorId, constants.NEW_NODE_EVENT, result, function(err) {

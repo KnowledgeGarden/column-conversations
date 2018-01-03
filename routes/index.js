@@ -6,7 +6,7 @@ var EventModel = require('../apps/models/eventlog_model');
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', helper.isPrivate, function(req, res, next) {
 //  console.log("Home",req.session);
   EventModel.listRecentEvents(50, function(events) {
     var data = helper.startData(req);
@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
  * This turns out to be an important vehicle for fetching a node
  * when you only know its id and its type.
  */
-router.get('/fetch/:id/:type', function(req, res, next) {
+router.get('/fetch/:id/:type', helper.isPrivate,function(req, res, next) {
   var id = req.params.id,
       type = req.params.type;
   console.log("Index.fetch",id,req.body);

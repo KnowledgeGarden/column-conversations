@@ -50,7 +50,7 @@ router.get('/ajaxtree/:id', function (req, res, next) {
 
 });
 
-router.get("/conversationindex", function(req, res, next) {
+router.get("/conversationindex", helper.isPrivate, function(req, res, next) {
     req.session.curCon = null;
     var data = helper.startData(req);
     var nd = ConversationModel.listConversations();
@@ -62,6 +62,7 @@ router.get("/conversationindex", function(req, res, next) {
 router.get("/newconversation", function(req, res, next) {
     console.log("New Conversation");
     var data = helper.startData(req);
+    data.hidden_1 = constants.CONVERSATION_NODE_TYPE;
     return res.render("newconversation_form", data);
 });
 

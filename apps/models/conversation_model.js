@@ -92,7 +92,7 @@ Conversation = function() {
     /**
      * Create a new conversation and its root node
      * @param creatorId
-     * @param {*} title 
+     * @param {*} title
      * @param {*} details 
      * @param {*} type 
      * @param {*} roottitle 
@@ -138,12 +138,14 @@ Conversation = function() {
         fileNames.forEach(function(fx) {
             if (!fx.includes(".DS_Store")) { // mac file system
                 self.fetchConversation(fx, function(thecon) {
-                    console.log("FE", fx, thecon);
-                    con = {};
-                    con.id = thecon.id;
-                    con.img = thecon.img;
-                    con.statement = thecon.statement;
-                    result.push(con);
+                    CommonModel.validateNodeImage(thecon, function() {
+                        console.log("FE", fx, thecon);
+                        con = {};
+                        con.id = thecon.id;
+                        con.img = thecon.imgsm;
+                        con.statement = thecon.statement;
+                        result.push(con);
+                    });
                 });
             }
         });

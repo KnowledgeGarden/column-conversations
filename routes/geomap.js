@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var helper = require('./helper');
 
-router.get('/geomap', function(req, res, next) {
+router.get('/geomap', helper.isPrivate, function(req, res, next) {
     var data = helper.startData(req);
     //NOTE, we can create a GeoMap model to control map initialization;
     // here we hard wire some values

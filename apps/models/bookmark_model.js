@@ -52,12 +52,13 @@ Bookmark = function() {
         fileNames.forEach(function(fx) {
             if (!fx.includes(".DS_Store")) { // mac file system
                 self.fetchBookmark(fx, function(err, thecon) {
-//                    console.log("FB", fx, thecon);
-                    con = {};
-                    con.id = thecon.id;
-                    con.img = thecon.img;
-                    con.statement = thecon.statement;
-                    result.push(con);
+                    CommonModel.validateNodeImage(thecon, function() {
+                        con = {};
+                        con.id = thecon.id;
+                        con.img = thecon.imgsm;
+                        con.statement = thecon.statement;
+                        result.push(con);
+                    });
                 });
             }
         });

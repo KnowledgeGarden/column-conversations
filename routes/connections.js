@@ -70,7 +70,7 @@ router.get('/remember/:id', function(req, res, next) {
     return res.redirect('/');
 });
 
-router.get('/connectionindex', function(req, res, next) {
+router.get('/connectionindex', helper.isPrivate, function(req, res, next) {
     var data = helper.startData(req);
     data.connectionlist = ConnectionModel.listConnections();
     return res.render("connection_index", data);

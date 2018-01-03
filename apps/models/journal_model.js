@@ -46,12 +46,14 @@ Journal = function() {
             if (fx) {
                 if (!fx.includes(".DS_Store")) { // mac file system
                     self.fetchJournal(fx, function(err, thecon) {
-                        console.log("FC", fx, thecon);
-                        con = {};
-                        con.id = thecon.id;
-                        con.img = thecon.img;
-                        con.statement = thecon.statement;
-                        result.push(con);
+                        CommonModel.validateNodeImage(thecon, function() {
+                            console.log("FJ", fx, thecon);
+                            con = {};
+                            con.id = thecon.id;
+                            con.img = thecon.imgsm;
+                            con.statement = thecon.statement;
+                            result.push(con);
+                        });
                     });
                 }
             }
