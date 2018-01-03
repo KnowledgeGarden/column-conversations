@@ -62,19 +62,20 @@ Connection = function() {
      */
     self.createConnection = function(creatorId, jsonBody, callback) {
         console.log("ConnectionModel.createConnection",creatorId, jsonBody);
-        var relnId = jsonBody.source+"."+jsonBody.select+"."+jsonBody.target;
+        var relnId = jsonBody.source+"."+jsonBody.selected+"."+jsonBody.target;
         Database.fetchConnection(relnId, function(err, data) {
             if (data) { //error -- already exists
                 return callback("Duplicate", data);
             } else { // build the connection
                 //fetch this connectionType's description
-                Database.fetchConnectionResource(jsonBody.select, function(err, resource) {
+                Database.fetchConnectionResource(jsonBody.selected, function(err, resource) {
+                    console.log("ConnectionModel.createConnection",jsonBody.selected, resource);
                     //fetch source
                     Database.fetchData(jsonBody.source, function(err, sourceNode) {
                         //fetch target
                         Database.fetchData(jsonBody.target, function(err, targetNode) {
                             //craft a relation node
-                            var label = jsonBody.select;
+                            var label = jsonBody.selected;
                             var details = sourceNode.statement+" "+resource.asSource+targetNode.statement;
                             CommonModel.newNode(relnId, creatorId, constants.RELATION_NODE_TYPE,
                                     label, details, function(json) {

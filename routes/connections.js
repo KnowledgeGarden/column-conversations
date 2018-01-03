@@ -103,6 +103,7 @@ router.post('/new', function(req, res, next) {
     console.log("Connections.post.net",ConnectionModel,body);
     ConnectionModel.createConnection(creatorId, body, function(err) {
         console.log("Connections.post.new",err);
+        req.session.transclude = null;
         //TODO make this redirect to the caller
         return res.redirect('/');
     });
