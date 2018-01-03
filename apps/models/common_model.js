@@ -53,6 +53,8 @@ Common = function() {
             return "/images/ibis/map_sm.png";
         } else if (type === constants.MAP_NODE_TYPE) {
             return "/images/ibis/map_sm.png";
+        } else if (type === constants.BLOG_NODE_TYPE) {
+            return "/images/publication_sm.png";
         } else {
             console.log("CommonModel.nodeToSmallIcon ERROR",type);
             throw "Bad Type 1 "+type;
@@ -84,6 +86,8 @@ Common = function() {
             return "/images/ibis/map.png";
         } else if (type === constants.MAP_NODE_TYPE) {
             return "/images/ibis/map.png";
+        } else if (type === constants.BLOG_NODE_TYPE) {
+            return "/images/publication.png";
         } else {
             console.log("CommonModel.nodeTolargeIcon ERROR",type);
             throw "Bad Type 2 "+type;
@@ -149,6 +153,8 @@ Common = function() {
                 result = node.relations;
             } else if (type === constants.BOOKMARKS_NODE_TYPE) {
                 result = node.bookmarks;
+            } else if (type === constants.BLOG_NODE_TYPE) {
+                result = node.journals;
             } else {
                     throw "Bad Type 3 "+type;
             } 
@@ -182,6 +188,8 @@ Common = function() {
             node.relations = list;
         } else if (type === constants.BOOKMARKS_NODE_TYPE) {
             node.bookmarks = list;
+        } else if (type === constants.BLOG_NODE_TYPE) {
+            node.journals = list;
         } else {
             throw "Bad Type 4 "+type;
         }

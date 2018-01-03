@@ -10,6 +10,7 @@ var ConversationModel = require('./models/conversation_model');
 var EventLogModel = require('./models/eventlog_model');
 var BookmarkModel = require('./models/bookmark_model');
 var ConnectionModel = require('./models/connection_model');
+var JournalModel = require('./models/journal_model');
 Environment = function() {
     var self = this;
     CommonModel.inject(EventLogModel);
@@ -18,6 +19,7 @@ Environment = function() {
     EventLogModel.inject(CommonModel);
     BookmarkModel.inject(CommonModel);
     ConnectionModel.inject(CommonModel);
+    JournalModel.inject(CommonModel);
         
 };
 module.exports = Environment;

@@ -5,6 +5,7 @@ var constants = require('../constants');
 const DataPath = "./data/";
 const ResourcePath = "./resources/";
 const ConversationPath = DataPath+"conversations/";
+const JournalPath = DataPath+"journal/";
 const BookmarkPath = DataPath+"bookmarks/";
 const ConnectionPath = DataPath+"connections/";
 const EventLogPath = DataPath+"eventlog/";
@@ -123,9 +124,15 @@ FileDatabase = function() {
                                 return callback(err2, data2);
                             } else {
                                 self.fetchConnection(nodeId, function(err3, data3) {
-                                    return callback(err3, data3);
-                                    //NOTE: if other models are added you must add
-                                    // their fetch methods here
+                                    if (data3) {
+                                        return callback(err3, data3);
+                                    } else {
+                                        self.fetchJournal(nodeId, function(err4, data4) {
+                                            return callback(err3, data3);
+                                            //NOTE: if other models are added you must add
+                                            // their fetch methods here
+                                        });
+                                    }
                                 });
                             }
                         });
@@ -150,7 +157,11 @@ FileDatabase = function() {
             self.saveConnectionData(nodeId, json, function(err) {
                 return callback(err);
             });
-        } else {//TODO ADD OTHER TYPES, e.g. Blog, etc
+        } else if (type === constants.BLOG_NODE_TYPE) {
+            self.saveJournalData(nodeId, json, function(err) {
+                return callback(err);
+            });
+         } else {//TODO ADD OTHER TYPES, e.g. Blog, etc
             //default conversation nodes
             self.saveNodeData(nodeId, json, function(err) {
                 return callback(err);
@@ -262,6 +273,36 @@ FileDatabase = function() {
 
     self.listTags = function() {
         return walkSync(TagPath, []);
+    };
+
+    ////////////////////////
+    // Journal
+    ////////////////////////
+
+    /**
+     * 
+     * @param {*} id 
+     * @param {*} callback err data
+     */
+    self.fetchJournal = function(id, callback) {
+        var path = JournalPath+id;
+        readFile(path, function(err, data) {
+            return callback(err, data);
+        });
+     };
+
+    self.saveJournalData = function(id, json, callback) {
+        console.log("DatabaseSaveJournalData",id,json);
+        fs.writeFile(JournalPath+id, 
+                JSON.stringify(json), function(err) {
+            return callback(err);
+        }); 
+    };
+
+    self.listJournal = function() {
+        var raw = walkSync(JournalPath, []);
+        var rev = raw.reverse();
+        return rev;
     };
 
     ////////////////////////

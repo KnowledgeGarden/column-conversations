@@ -171,7 +171,7 @@ router.post("/newnode", function(req, res, next) {
         details = req.body.details,
         parentId = req.body.hidden_1,
         type = req.body.hidden_2,
-        creatorId = req.session.theUser; //constants.TEST_CREATOR; //ToDo
+        creatorId = req.session.theUser;
     //TODO
     console.log("NN", JSON.stringify(req.body));
     ConversationModel.newResponseNode(creatorId, parentId, type, title, details, function(err) {

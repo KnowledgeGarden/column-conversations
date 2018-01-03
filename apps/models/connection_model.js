@@ -1,7 +1,6 @@
 var constants = require('../constants');
 var Database = require('../drivers/file_database_driver');
-//const environment = require('../environment');
-var CommonModel; // = environment.CommonModel;
+var CommonModel;
 var Connection,
     instance;
 

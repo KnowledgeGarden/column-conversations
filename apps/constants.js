@@ -30,7 +30,7 @@ module.exports.DECISION_NODE_TYPE           = "DecisionNodeType";
 module.exports.TAG_NODE_TYPE                = "TagNodeType";
 module.exports.RELATION_NODE_TYPE           = "RelationNodeType";
 module.exports.BOOKMARK_NODE_TYPE           = "BookmarkNodeType";
-
+module.exports.BLOG_NODE_TYPE               = "BlogNodeType"; // used for the Journal App
 /**
  * Node schema fields
  * While we don't actually use these in Javascript

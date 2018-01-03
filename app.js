@@ -49,6 +49,7 @@ var Reln = require('./routes/connections');
 var DbP = require('./routes/dbpedia');
 var Cs = require('./routes/carrotsearch');
 var Gm = require('./routes/geomap');
+var Jnl = require('./routes/journal');
 
 app.use('/users', users);
 app.use('/bookmark/', Bmk);
@@ -58,6 +59,7 @@ app.use('/conversation', Conv);
 app.use('/dbpedia', DbP);
 app.use('/carrotsearch', Cs);
 app.use('/geomap', Gm);
+app.use('/journal', Jnl);
 // Index has to be last
 app.use('/', Indx);
 

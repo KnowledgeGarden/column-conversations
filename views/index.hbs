@@ -3,7 +3,11 @@
     <h1 style="font-family:Comic Sans MS;" >{{title}}</h1>
     <img  src="/images/earthrise2.png">
     <h3 style="margin-left:20px;"><i>We don't stop playing because we grow old, we grow old because we stop playing.</i> -George Bernard Shaw</h3>
-    <h3>Recent Additions</h3>
+    {{#if isAuthenticated}}
+        <form><h3>Recent Additions  <form><input type="button" style="margin-left: 20px"  onclick="window.location.href='/journal/new'" value="New Journal Entry" /> </h3></form>
+    {{else}}
+        <h3>Recent Additions</h3>
+    {{/if}}
     <div style="overflow-y: auto; height:300px;">
         <table >
             {{#each recentlist}}
