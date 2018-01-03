@@ -128,7 +128,7 @@ FileDatabase = function() {
                                         return callback(err3, data3);
                                     } else {
                                         self.fetchJournal(nodeId, function(err4, data4) {
-                                            return callback(err3, data3);
+                                            return callback(err4, data4);
                                             //NOTE: if other models are added you must add
                                             // their fetch methods here
                                         });
