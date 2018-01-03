@@ -49,6 +49,8 @@ router.post("/newnode", function(req, res, next) {
             return res.redirect('/bookmark/'+parentId);
         } else if (type === constants.RELATION_NODE_TYPE) {
             return res.redirect('/connections/'+parentId);
+        } else if (type === constants.BLOG_NODE_TYPE) {
+            return res.redirect('/journal/'+parentId);
         } else if (type === constants.CONVERSATION_NODE_TYPE) {
             return res.redirect('/conversation/fetchconversation/'+parentId);
         } else { 
