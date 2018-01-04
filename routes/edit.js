@@ -62,7 +62,11 @@ router.get('/edit/:id', function(req, res, next) {
 });
 
 router.post('/edit', function(req, res, next) {
+    var json = req.body,
+        id = req.body.hidden_1;
+    CommonModel.updateNode(body, function(err) {
 
+    });
 });
 
 module.exports = router;

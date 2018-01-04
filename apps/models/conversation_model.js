@@ -2,8 +2,8 @@ const DataPath = "../../data/";
 const environment = require('../environment');
 const ConversationPath = DataPath+"conversations/";
 var Database = require('../drivers/file_database_driver');
-var CommonModel = environment.CommonModel;
-var EventModel = environment.EventLogModel;
+var CommonModel;
+var EventModel;
 var uuid = require('uuid');
 var constants = require('../constants');
 var Conversation,
