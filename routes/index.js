@@ -44,6 +44,40 @@ router.get('/login', function(req, res, next) {
   return res.render("login_form", data);
 });
 
+router.get("/aboutbookmarks", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_bookmarks", data);
+});
+router.get("/aboutconnections", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_connections", data);
+});
+router.get("/aboutjournals", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_journal", data);
+});
+router.get("/aboutconversations", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_conversations", data);
+});
+router.get("/abouttags", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_tags", data);
+});
+router.get("/aboutdbpedia", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_dbpedia", data);
+});
+router.get("/aboutcarrotsearch", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_carrotsearch", data);
+});
+router.get("/aboutgeomap", function(req, res, nex) {
+  var data = helper.startData(req);
+  return res.render("about_geomap", data);
+});
+
+
 router.post('/login', function(req, res, next) {
   var name = req.body.username,
       password = req.body.password;

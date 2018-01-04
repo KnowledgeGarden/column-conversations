@@ -1,20 +1,26 @@
+
 <div id="homebar">
     <img style="margin-left: 4px; margin-right: 4px" src="/images/ibis/map.png">
     <a style="vertical-align: middle;" href="/"><b>Home</b></a>
     <div class="dropdown">
         <button class="dropbtn">Applications</button>
         <div class="dropdown-content">
-            <a href="/bookmark/bookmarkindex">Bookmarks</a>
+            <a href="/bookmark/bookmarkindex">Bookmarks</a> 
             <a href="/connections/connectionindex">Connections</a>
             <a href="/conversation/conversationindex">Conversations</a>
-            <a href="/dbpedia/dbpedia">DbPedia</a>
-            <a href="/geomap/geomap">GeoMap</a>
             <a href="/journal/journalindex">Journal</a>
             <a href="/tags/tagindex">Tags</a>
+        </div>
+         
+   </div>
+    <div class="dropdown">
+        <button class="dropbtn">Tools</button>
+        <div class="dropdown-content">
+            <a href="/dbpedia/dbpedia">DBpedia</a>
+            <a href="/geomap/geomap">GeoMap</a>
             <a href="/carrotsearch/carrotsearch">Web Search</a>
         </div>
     </div>
-
     {{#if curCon}}
         <span style="margin-left:30px;"><a href="/conversation/{{curCon}}">Current Conversation</a></span>
         <span style="margin-left:10px;"><a href="/conversation/jstree/{{curCon}}">Tree View</a></span>
