@@ -55,6 +55,17 @@ EventLog = function() {
         });
     };
 
+    /**
+     * struct must include event type, e.g. { type:"LoginEvent", content:"joe"}
+     * @param {*} struct 
+     * @param {*} callback 
+     */
+    self.registerSimpleEvent = function(struct, callback) {
+        Database.saveHistory(struct, function(err) {
+            return callback(err);
+        });
+    };
+
     self.listRecentEvents = function(count, callback) {
         Database.listRecents(count, function(json) {
             console.log("EventModel.listRecentEvents"+json);

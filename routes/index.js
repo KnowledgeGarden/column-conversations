@@ -83,8 +83,15 @@ router.post('/login', function(req, res, next) {
       password = req.body.password;
   if (!helper.authenticate(name, password, req)) {
     req.flash("error", "Authentication failed");
+    return res.redirect('/');
+  } else {
+    var struct = {};
+    struct.type = constants.LOGIN_EVENT;
+    struct.content = name;
+    EventModel.registerSimpleEvent(struct, function(err) {
+      return res.redirect('/');
+    });
   }
 //  console.log("LOGIN",name,req.session);
-  return res.redirect('/');
 });
 module.exports = router;
