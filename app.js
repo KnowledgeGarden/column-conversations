@@ -50,6 +50,7 @@ var DbP = require('./routes/dbpedia');
 var Cs = require('./routes/carrotsearch');
 var Gm = require('./routes/geomap');
 var Jnl = require('./routes/journal');
+var Ed = require('./routes/edit');
 
 app.use('/users', users);
 app.use('/bookmark/', Bmk);
@@ -60,6 +61,8 @@ app.use('/dbpedia', DbP);
 app.use('/carrotsearch', Cs);
 app.use('/geomap', Gm);
 app.use('/journal', Jnl);
+app.use('/edit', Ed);
+
 // Index has to be last
 app.use('/', Indx);
 

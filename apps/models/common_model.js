@@ -27,7 +27,18 @@ Common = function() {
     self.newId = function() {
         var d = new Date();
         return d.getTime().toString();
-    }
+    };
+
+    /**
+     * Utility
+     * @param {*} nodeId 
+     * @param {*} callback err data
+     */
+    self.fetchNode = function(nodeId, callback) {
+        Database.fetchData(nodeId, function(err, node) {
+            return callback(err, node);
+        });
+    };
 
     /**
      * A temporary patch to be removed soon
@@ -77,7 +88,7 @@ Common = function() {
             return "/images/publication_sm.png";
         } else {
             console.log("CommonModel.nodeToSmallIcon ERROR",type);
-            throw "Bad Type 1 "+type;
+            throw "Bad Type 1: "+type;
         }
     };
 
@@ -110,7 +121,7 @@ Common = function() {
             return "/images/publication.png";
         } else {
             console.log("CommonModel.nodeTolargeIcon ERROR",type);
-            throw "Bad Type 2 "+type;
+            throw "Bad Type 2: "+type;
         }
     };
 
@@ -142,6 +153,91 @@ Common = function() {
         EventLogModel.registerEvent(creatorId, constants.NEW_NODE_EVENT, result, function(err) {
             console.log("CommonModel.newNode",creatorId,type,result);
             return callback(result);
+        });
+    };
+
+    //////////////////////////////////
+    // IF a Statement (label) is changed, then
+    // we have to find all the structs which use that
+    // statement and change them to the new version
+    // constants.EDIT_NODE_EVENT
+    /////////////////////////////////
+    /**
+     * Test for conversational children
+     * @param {*} node 
+     */
+    self.hasIBISChildren = function (node) {
+        var x = node.questions;
+        if (x) {
+            return true;
+        }
+        x = node.answers;
+        if (x) {
+            return true;
+        }
+        x = node.pros;
+        if (x) {
+            return true;
+        }
+        x = node.cons;
+        if (x) {
+            return true;
+        }
+        return false; // default
+    };
+
+    function sameStatements(json, node) {
+        return (json.statement === node.statement);
+    };
+
+    /**
+     * Ripple through the entire database
+     * looking for nodes with children that hold this node
+     * as a child
+     * @param {*} oldStatement 
+     * @param {*} node 
+     * @param {*} callback 
+     */
+    function propagateStatementChange(oldStatement, node, callback) {
+        //TODO
+        return callback(null);
+    };
+
+    /**
+     * json could include statement, details, url, ...
+     * @param {*} json 
+     * @param {*} callback err
+     */
+    self.updateNode = function(json, callback) {
+        var nodeId = json.hidden_1,
+            version = json.hidden_2;
+        //fetch the node being edited
+        self.fetchNode(nodeId, function(err, oldNode) {
+            //deal with statement
+            var labelChanged = false;
+            var oldStatement = oldNode.statement;
+            if (!self.hasIBISChildren(oldNode)) {
+                labelChanged = sameStatements(json, oldNode);
+            }
+            //deal with URL if any
+            if (json.url) {
+                oldNode.url = json.url;
+            }
+            //deal with details
+            if (json.details) {
+                oldNode.details = json.details;
+            }
+            oldNode.version = self.newId();
+            // save it
+            Database.saveData(oldNode.id, oldNode, function(err) {
+                if (labelChanged) {
+                    propagateStatementChange(oldStatement, node, function(err) {
+                        return callback(err);
+                    });
+                } else {
+                    return callback(err);
+                }
+            });
         });
     };
 

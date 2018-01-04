@@ -39,6 +39,15 @@ Helper = function() {
 //        console.log("XYZ-2",req.session.curCon,req.session.theUser);
         return result;
     };
+
+    /**
+     * This will be extended to ask if user is an admin
+     * @param {*} userId 
+     * @param {*} node 
+     */
+    self.canEdit = function(userId, node) {
+        return (userId === node.creatorId);
+    };
     
     self.isAuthenticated = function(req) {
 //        console.log("Helper.isAuthenticated",req.session);
